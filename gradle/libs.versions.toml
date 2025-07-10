@@ -1,0 +1,14 @@
+[versions]
+minestom = "2025.07.08-1.21.5"
+
+#Testing
+junit-bom = "5.10.0"
+junit-jupiter = "1.10.0"
+
+[libraries]
+minestom = { module = "net.minestom:minestom", version.ref = "minestom" }
+
+# Testing
+minestom-testing = { module = "net.minestom:testing", version.ref = "minestom" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-bom" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }

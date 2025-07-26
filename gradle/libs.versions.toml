@@ -1,5 +1,6 @@
 [versions]
 minestom = "2025.07.26-1.21.8"
+adventure = "4.23.0"
 
 #Testing
 junit-bom = "5.10.0"
@@ -7,6 +8,7 @@ junit-jupiter = "1.10.0"
 
 [libraries]
 minestom = { module = "net.minestom:minestom", version.ref = "minestom" }
+adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 
 # Testing
 minestom-testing = { module = "net.minestom:testing", version.ref = "minestom" }

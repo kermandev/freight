@@ -24,7 +24,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build javadoc
 
-      - name: Publish to GitHub Packages
+      - name: Publish to Maven Central
         run: ./gradlew publish
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}

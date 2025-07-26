@@ -1,5 +1,5 @@
 [versions]
-minestom = "2025.07.08-1.21.5"
+minestom = "2025.07.26-1.21.8"
 
 #Testing
 junit-bom = "5.10.0"

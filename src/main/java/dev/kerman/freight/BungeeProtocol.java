@@ -19,7 +19,6 @@ import java.util.UUID;
  * The protocol is used to communicate between the server and BungeeCord proxy.
  */
 final class BungeeProtocol {
-    static final Logger LOGGER = LoggerFactory.getLogger(BungeeProtocol.class);
     static final String CHANNEL = "BungeeCord"; // aka bungeecord:main
     static final NetworkBuffer.Type<List<String>> CSV_TYPE = NetworkBuffer.STRING_IO_UTF8.transform(
             string -> List.of(string.split(",")),
@@ -55,12 +54,10 @@ final class BungeeProtocol {
     }
 
     // Reads the message from the buffer and checks if there are any leftover bytes
-    static <T extends BungeeMessage> T read(NetworkBuffer buffer, NetworkBuffer.Type<T> type) {
+    static <T extends BungeeMessage> T read(NetworkBuffer buffer, NetworkBuffer.Type<T> type) throws IllegalStateException {
         final T read = buffer.read(type);
         final long readableBytes = buffer.readableBytes();
-        if (readableBytes > 0) {
-            LOGGER.warn("`{}` message not fully read! {} bytes left over.", read.getClass().getName(), readableBytes);
-        }
+        if (readableBytes > 0) throw new IllegalStateException("%s message not fully read! %d bytes left over.".formatted(read.getClass().getName(), readableBytes));
         return read;
     }
 
@@ -88,13 +85,12 @@ final class BungeeProtocol {
         public static final NetworkBuffer.Type<Type> SERIALIZER = NetworkBuffer.STRING_IO_UTF8
                 .transform(Type::valueOf, Type::name);
 
-        private final NetworkBuffer.Type<BungeeRequest> requestSerializer;
-        private final NetworkBuffer.Type<BungeeResponse> responseSerializer;
+        private final NetworkBuffer.Type<? extends BungeeRequest> requestSerializer;
+        private final NetworkBuffer.Type<? extends BungeeResponse> responseSerializer;
 
-        @SuppressWarnings("unchecked")
         Type(NetworkBuffer.Type<? extends BungeeRequest> requestSerializer, NetworkBuffer.Type<? extends BungeeResponse> responseSerializer) {
-            this.requestSerializer = (NetworkBuffer.Type<BungeeRequest>) requestSerializer;
-            this.responseSerializer = (NetworkBuffer.Type<BungeeResponse>) responseSerializer;
+            this.requestSerializer = requestSerializer;
+            this.responseSerializer = responseSerializer;
         }
 
         // Could probably use polymorphism here, but it makes the classes have less information about the serialization
@@ -142,11 +138,11 @@ final class BungeeProtocol {
             };
         }
 
-        public NetworkBuffer.Type<BungeeResponse> responseSerializer() {
+        public NetworkBuffer.Type<? extends BungeeResponse> responseSerializer() {
             return responseSerializer;
         }
 
-        public NetworkBuffer.Type<BungeeRequest> requestSerializer() {
+        public NetworkBuffer.Type<? extends BungeeRequest> requestSerializer() {
             return requestSerializer;
         }
     }

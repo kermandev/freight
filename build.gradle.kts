@@ -23,5 +23,9 @@ tasks {
 
     test {
         useJUnitPlatform()
+
+        // Required for Minestom tests to run properly
+        jvmArgs("-Dminestom.viewable-packet=false")
+        jvmArgs("-Dminestom.inside-test=true")
     }
 }

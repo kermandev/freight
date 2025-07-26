@@ -81,6 +81,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
             Check.notNull(serverName, "Server name cannot be null");
         }
 
+        /**
+         * @return A PlayerCount request for all players.
+         */
         static PlayerCount all() {
             return new PlayerCount(ALL);
         }
@@ -96,6 +99,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
             Check.notNull(serverName, "Server name cannot be null");
         }
 
+        /**
+         * @return A PlayerList request for all players.
+         */
         static PlayerList all() {
             return new PlayerList(ALL);
         }
@@ -121,6 +127,11 @@ public sealed interface BungeeRequest extends BungeeMessage {
             this(player.get(Identity.NAME).orElseThrow(), message);
         }
 
+        /**
+         * Creates a Message request for all players across all servers.
+         * @param message The message to send to all players.
+         * @return A Message request for all players.
+         */
         static Message all(@NotNull String message) {
             return new Message(ALL, message);
         }
@@ -150,10 +161,20 @@ public sealed interface BungeeRequest extends BungeeMessage {
             this(player.get(Identity.NAME).orElseThrow(), GsonComponentSerializer.gson().serialize(message));
         }
 
+        /**
+         * Creates a MessageRaw request for all players across all servers.
+         * @param message The message to send to all players.
+         * @return A MessageRaw request for all players.
+         */
         static MessageRaw all(@NotNull String message) {
             return new MessageRaw(ALL, message);
         }
 
+        /**
+         * Creates a MessageRaw request for all players across all servers.
+         * @param message The message to send to all players.
+         * @return A MessageRaw request for all players.
+         */
         static MessageRaw all(@NotNull Component message) {
             return new MessageRaw(ALL, message);
         }
@@ -266,10 +287,22 @@ public sealed interface BungeeRequest extends BungeeMessage {
             data = data.clone();
         }
 
+        /**
+         * Creates a Forward request for all servers. (excluding the server this request is sent from)
+         * @param channel The channel to forward the data to.
+         * @param data The data to forward.
+         * @return A Forward request for all servers.
+         */
         static Forward all(@NotNull String channel, byte @NotNull [] data) {
             return new Forward(ALL, channel, data);
         }
 
+        /**
+         * Creates a Forward request for the online server. (excluding the server this request is sent from)
+         * @param channel The channel to forward the data to.
+         * @param data The data to forward.
+         * @return A Forward request for the online server.
+         */
         static Forward online(@NotNull String channel, byte @NotNull [] data) {
             return new Forward(ONLINE, channel, data);
         }
@@ -278,6 +311,14 @@ public sealed interface BungeeRequest extends BungeeMessage {
         public boolean equals(Object object) {
             if (!(object instanceof Forward(String server1, String channel1, byte[] data1))) return false;
             return serverName().equals(server1) && channel().equals(channel1) && Arrays.equals(data(), data1);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = serverName().hashCode();
+            result = 31 * result + channel().hashCode();
+            result = 31 * result + Arrays.hashCode(data());
+            return result;
         }
     }
 
@@ -306,6 +347,14 @@ public sealed interface BungeeRequest extends BungeeMessage {
         public boolean equals(Object object) {
             if (!(object instanceof ForwardToPlayer(String playerName1, String channel1, byte[] data1))) return false;
             return playerName().equals(playerName1) && channel().equals(channel1) && Arrays.equals(data(), data1);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = playerName().hashCode();
+            result = 31 * result + channel().hashCode();
+            result = 31 * result + Arrays.hashCode(data());
+            return result;
         }
     }
 }

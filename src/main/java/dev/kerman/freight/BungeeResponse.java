@@ -196,6 +196,13 @@ public sealed interface BungeeResponse extends BungeeMessage {
             if (!(object instanceof Forward(String channel1, byte[] data1))) return false;
             return channel().equals(channel1) && Arrays.equals(data(), data1);
         }
+
+        @Override
+        public int hashCode() {
+            int result = channel().hashCode();
+            result = 31 * result + Arrays.hashCode(data());
+            return result;
+        }
     }
 
     record ForwardToPlayer(@NotNull String channel, byte @NotNull [] data) implements BungeeResponse {
@@ -215,6 +222,13 @@ public sealed interface BungeeResponse extends BungeeMessage {
         public boolean equals(Object object) {
             if (!(object instanceof ForwardToPlayer(String channel1, byte[] data1))) return false;
             return channel().equals(channel1) && Arrays.equals(data(), data1);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = channel().hashCode();
+            result = 31 * result + Arrays.hashCode(data());
+            return result;
         }
     }
 }

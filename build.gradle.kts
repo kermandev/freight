@@ -41,6 +41,7 @@ tasks {
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = !version.toString().contains("SNAPSHOT"))
+    signAllPublications()
 
     pom {
         name.set("Freight")

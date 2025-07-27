@@ -12,8 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.kerman.freight.BungeeResponse.Connect;
-import static dev.kerman.freight.BungeeResponse.ConnectOther;
+
 import static dev.kerman.freight.BungeeResponse.Forward;
 import static dev.kerman.freight.BungeeResponse.ForwardToPlayer;
 import static dev.kerman.freight.BungeeResponse.GetPlayerServer;
@@ -21,10 +20,6 @@ import static dev.kerman.freight.BungeeResponse.GetServer;
 import static dev.kerman.freight.BungeeResponse.GetServers;
 import static dev.kerman.freight.BungeeResponse.IP;
 import static dev.kerman.freight.BungeeResponse.IPOther;
-import static dev.kerman.freight.BungeeResponse.KickPlayer;
-import static dev.kerman.freight.BungeeResponse.KickPlayerRaw;
-import static dev.kerman.freight.BungeeResponse.Message;
-import static dev.kerman.freight.BungeeResponse.MessageRaw;
 import static dev.kerman.freight.BungeeResponse.PlayerCount;
 import static dev.kerman.freight.BungeeResponse.PlayerList;
 import static dev.kerman.freight.BungeeResponse.ServerIP;
@@ -38,22 +33,16 @@ public final class BungeeResponseTest { //TODO bin tests
 
     static List<BungeeResponse> responses() {
         return List.of(
-                new Connect(),
-                new ConnectOther(),
                 new IP("127.0.0.1", 11111),
                 new IPOther("playerName", "127.0.0.1", 11111),
                 new PlayerCount("testServer", 100),
                 new PlayerList("testServer", List.of("player1", "player2")),
                 new GetServers(List.of("server1", "server2")),
-                new Message(),
-                new MessageRaw(),
                 new GetServer("testServer"),
                 new GetPlayerServer("playerName", "testServer"),
                 new BungeeResponse.UUID(UUID.randomUUID()),
                 new UUIDOther("playerName", UUID.randomUUID()),
                 new ServerIP("testServer", "127.0.0.1", 25565),
-                new KickPlayer(),
-                new KickPlayerRaw(),
                 new Forward("testServer", "Forwarded message".getBytes()),
                 new ForwardToPlayer("testServer", "Forwarded messag2e".getBytes())
         );

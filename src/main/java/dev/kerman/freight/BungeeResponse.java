@@ -26,22 +26,6 @@ public sealed interface BungeeResponse extends BungeeMessage {
             .unionType(BungeeProtocol.Type::responseSerializer, BungeeProtocol.Type::toType);
 
     /**
-     * Unused by default; potential response to a {@link BungeeRequest.Connect} request.
-     */
-    record Connect() implements BungeeResponse {
-        @ApiStatus.Experimental
-        public static final NetworkBuffer.Type<Connect> SERIALIZER = NetworkBufferTemplate.template(Connect::new);
-    }
-
-    /**
-     * Unused by default; potential response to a {@link BungeeRequest.ConnectOther} request.
-     */
-    record ConnectOther() implements BungeeResponse {
-        @ApiStatus.Experimental
-        public static final NetworkBuffer.Type<ConnectOther> SERIALIZER = NetworkBufferTemplate.template(ConnectOther::new);
-    }
-
-    /**
      * A response containing the IP address and port of the server.
      * @param ip the IP address of the server
      * @param port the port of the server, must be non-negative and less than or equal to 65535
@@ -139,22 +123,6 @@ public sealed interface BungeeResponse extends BungeeMessage {
     }
 
     /**
-     * Unused by default; potential response to a {@link BungeeRequest.Message} request.
-     */
-    record Message() implements BungeeResponse {
-        @ApiStatus.Experimental
-        public static final NetworkBuffer.Type<Message> SERIALIZER = NetworkBufferTemplate.template(Message::new);
-    }
-
-    /**
-     * Unused by default; potential response to a {@link BungeeRequest.MessageRaw} request.
-     */
-    record MessageRaw() implements BungeeResponse {
-        @ApiStatus.Experimental
-        public static final NetworkBuffer.Type<MessageRaw> SERIALIZER = NetworkBufferTemplate.template(MessageRaw::new);
-    }
-
-    /**
      * A response containing the server name.
      * @param serverName the name of the server
      */
@@ -245,22 +213,6 @@ public sealed interface BungeeResponse extends BungeeMessage {
             // Port is an unsigned short (so we use an int).
             Check.argCondition(port <= 0 || port > 65535, "Port must be greater than 0 and less than or equal to 65535");
         }
-    }
-
-    /**
-     * Unused by default; potential response to a {@link BungeeRequest.KickPlayer} request.
-     */
-    record KickPlayer() implements BungeeResponse {
-        @ApiStatus.Experimental
-        public static final NetworkBuffer.Type<KickPlayer> SERIALIZER = NetworkBufferTemplate.template(KickPlayer::new);
-    }
-
-    /**
-     * Unused by default; potential response to a {@link BungeeRequest.KickPlayerRaw} request.
-     */
-    record KickPlayerRaw() implements BungeeResponse {
-        @ApiStatus.Experimental
-        public static final NetworkBuffer.Type<KickPlayerRaw> SERIALIZER = NetworkBufferTemplate.template(KickPlayerRaw::new);
     }
 
     /**

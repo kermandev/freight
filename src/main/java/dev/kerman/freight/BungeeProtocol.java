@@ -61,22 +61,22 @@ final class BungeeProtocol {
 
     // This is awful, but I don't want a map lookup.
     enum Type {
-        Connect(BungeeRequest.Connect.SERIALIZER, BungeeResponse.Connect.SERIALIZER),
-        ConnectOther(BungeeRequest.ConnectOther.SERIALIZER, BungeeResponse.ConnectOther.SERIALIZER),
+        Connect(BungeeRequest.Connect.SERIALIZER, null),
+        ConnectOther(BungeeRequest.ConnectOther.SERIALIZER, null),
         IP(BungeeRequest.IP.SERIALIZER, BungeeResponse.IP.SERIALIZER),
         IPOther(BungeeRequest.IPOther.SERIALIZER, BungeeResponse.IPOther.SERIALIZER),
         PlayerCount(BungeeRequest.PlayerCount.SERIALIZER, BungeeResponse.PlayerCount.SERIALIZER),
         PlayerList(BungeeRequest.PlayerList.SERIALIZER, BungeeResponse.PlayerList.SERIALIZER),
         GetServers(BungeeRequest.GetServers.SERIALIZER, BungeeResponse.GetServers.SERIALIZER),
-        Message(BungeeRequest.Message.SERIALIZER, BungeeResponse.Message.SERIALIZER),
-        MessageRaw(BungeeRequest.MessageRaw.SERIALIZER, BungeeResponse.MessageRaw.SERIALIZER),
+        Message(BungeeRequest.Message.SERIALIZER, null),
+        MessageRaw(BungeeRequest.MessageRaw.SERIALIZER, null),
         GetServer(BungeeRequest.GetServer.SERIALIZER, BungeeResponse.GetServer.SERIALIZER),
         GetPlayerServer(BungeeRequest.GetPlayerServer.SERIALIZER, BungeeResponse.GetPlayerServer.SERIALIZER),
         UUID(BungeeRequest.UUID.SERIALIZER, BungeeResponse.UUID.SERIALIZER),
         UUIDOther(BungeeRequest.UUIDOther.SERIALIZER, BungeeResponse.UUIDOther.SERIALIZER),
         ServerIp(BungeeRequest.ServerIP.SERIALIZER, BungeeResponse.ServerIP.SERIALIZER),
-        KickPlayer(BungeeRequest.KickPlayer.SERIALIZER, BungeeResponse.KickPlayer.SERIALIZER),
-        KickPlayerRaw(BungeeRequest.KickPlayerRaw.SERIALIZER, BungeeResponse.KickPlayerRaw.SERIALIZER),
+        KickPlayer(BungeeRequest.KickPlayer.SERIALIZER, null),
+        KickPlayerRaw(BungeeRequest.KickPlayerRaw.SERIALIZER, null),
         Forward(BungeeRequest.Forward.SERIALIZER, BungeeResponse.Forward.SERIALIZER),
         ForwardToPlayer(BungeeRequest.ForwardToPlayer.SERIALIZER, BungeeResponse.ForwardToPlayer.SERIALIZER);
 
@@ -115,22 +115,16 @@ final class BungeeProtocol {
                 case BungeeRequest.Forward ignored -> Forward;
                 case BungeeRequest.ForwardToPlayer ignored -> ForwardToPlayer;
                 // Responses
-                case BungeeResponse.Connect ignored -> Connect;
-                case BungeeResponse.ConnectOther ignored -> ConnectOther;
                 case BungeeResponse.IP ignored -> IP;
                 case BungeeResponse.IPOther ignored -> IPOther;
                 case BungeeResponse.PlayerCount ignored -> PlayerCount;
                 case BungeeResponse.PlayerList ignored -> PlayerList;
                 case BungeeResponse.GetServers ignored -> GetServers;
-                case BungeeResponse.Message ignored -> Message;
-                case BungeeResponse.MessageRaw ignored -> MessageRaw;
                 case BungeeResponse.GetServer ignored -> GetServer;
                 case BungeeResponse.GetPlayerServer ignored -> GetPlayerServer;
                 case BungeeResponse.UUID ignored -> UUID;
                 case BungeeResponse.UUIDOther ignored -> UUIDOther;
                 case BungeeResponse.ServerIP ignored -> ServerIp;
-                case BungeeResponse.KickPlayer ignored -> KickPlayer;
-                case BungeeResponse.KickPlayerRaw ignored -> KickPlayerRaw;
                 case BungeeResponse.Forward ignored -> Forward;
                 case BungeeResponse.ForwardToPlayer ignored -> ForwardToPlayer;
             };

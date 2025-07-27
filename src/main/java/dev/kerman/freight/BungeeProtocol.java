@@ -5,7 +5,6 @@ import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -81,8 +80,7 @@ final class BungeeProtocol {
         Forward(BungeeRequest.Forward.SERIALIZER, BungeeResponse.Forward.SERIALIZER),
         ForwardToPlayer(BungeeRequest.ForwardToPlayer.SERIALIZER, BungeeResponse.Forward.SERIALIZER);
 
-        public static final NetworkBuffer.Type<Type> SERIALIZER = new NetworkBuffer.Type<Type>() {
-            final
+        public static final NetworkBuffer.Type<Type> SERIALIZER = new NetworkBuffer.Type<>() {
             @Override
             public void write(@NotNull NetworkBuffer buffer, Type value) {
                 buffer.write(NetworkBuffer.STRING_IO_UTF8, value.name());

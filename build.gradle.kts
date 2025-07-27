@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.kerman"
-version = "1.3"
+version = "1.3.1"
 
 repositories {
     mavenCentral()

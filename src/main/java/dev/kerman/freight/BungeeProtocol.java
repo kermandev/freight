@@ -5,6 +5,7 @@ import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -78,10 +79,27 @@ final class BungeeProtocol {
         KickPlayer(BungeeRequest.KickPlayer.SERIALIZER, null),
         KickPlayerRaw(BungeeRequest.KickPlayerRaw.SERIALIZER, null),
         Forward(BungeeRequest.Forward.SERIALIZER, BungeeResponse.Forward.SERIALIZER),
-        ForwardToPlayer(BungeeRequest.ForwardToPlayer.SERIALIZER, BungeeResponse.ForwardToPlayer.SERIALIZER);
+        ForwardToPlayer(BungeeRequest.ForwardToPlayer.SERIALIZER, BungeeResponse.Forward.SERIALIZER);
 
-        public static final NetworkBuffer.Type<Type> SERIALIZER = NetworkBuffer.STRING_IO_UTF8
-                .transform(Type::valueOf, Type::name);
+        public static final NetworkBuffer.Type<Type> SERIALIZER = new NetworkBuffer.Type<Type>() {
+            final
+            @Override
+            public void write(@NotNull NetworkBuffer buffer, Type value) {
+                buffer.write(NetworkBuffer.STRING_IO_UTF8, value.name());
+            }
+
+            @Override
+            public Type read(@NotNull NetworkBuffer buffer) {
+                final long readIndex = buffer.readIndex();
+                try { // Try to determine if the type is prefixed or not.
+                    final String name = buffer.read(NetworkBuffer.STRING_IO_UTF8);
+                    return Type.valueOf(name);
+                } catch (IllegalArgumentException | IndexOutOfBoundsException ignored) {
+                    buffer.readIndex(readIndex);
+                }
+                return Type.Forward; // They are unprefixed YAY!
+            }
+        };
 
         private final NetworkBuffer.Type<? extends BungeeRequest> requestSerializer;
         private final NetworkBuffer.Type<? extends BungeeResponse> responseSerializer;
@@ -126,7 +144,6 @@ final class BungeeProtocol {
                 case BungeeResponse.UUIDOther ignored -> UUIDOther;
                 case BungeeResponse.ServerIP ignored -> ServerIp;
                 case BungeeResponse.Forward ignored -> Forward;
-                case BungeeResponse.ForwardToPlayer ignored -> ForwardToPlayer;
             };
         }
 

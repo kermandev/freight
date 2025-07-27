@@ -14,7 +14,6 @@ import java.util.UUID;
 
 
 import static dev.kerman.freight.BungeeResponse.Forward;
-import static dev.kerman.freight.BungeeResponse.ForwardToPlayer;
 import static dev.kerman.freight.BungeeResponse.GetPlayerServer;
 import static dev.kerman.freight.BungeeResponse.GetServer;
 import static dev.kerman.freight.BungeeResponse.GetServers;
@@ -43,8 +42,7 @@ public final class BungeeResponseTest { //TODO bin tests
                 new BungeeResponse.UUID(UUID.randomUUID()),
                 new UUIDOther("playerName", UUID.randomUUID()),
                 new ServerIP("testServer", "127.0.0.1", 25565),
-                new Forward("testServer", "Forwarded message".getBytes()),
-                new ForwardToPlayer("testServer", "Forwarded messag2e".getBytes())
+                new Forward("testServer", "Forwarded message".getBytes())
         );
     }
 

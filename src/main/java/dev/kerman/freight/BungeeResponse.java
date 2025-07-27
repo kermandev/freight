@@ -247,37 +247,4 @@ public sealed interface BungeeResponse extends BungeeMessage {
             return result;
         }
     }
-
-    /**
-     * A response to forward a message to a specific player.
-     * @param channel the channel forwarded
-     * @param data the data forwarded
-     */
-    record ForwardToPlayer(@NotNull String channel, byte @NotNull [] data) implements BungeeResponse {
-        @ApiStatus.Experimental
-        public static final NetworkBuffer.Type<ForwardToPlayer> SERIALIZER = NetworkBufferTemplate.template(
-                NetworkBuffer.STRING_IO_UTF8, ForwardToPlayer::channel,
-                BungeeProtocol.SHORT_BYTE_ARRAY_TYPE, ForwardToPlayer::data,
-                ForwardToPlayer::new
-        );
-
-        public ForwardToPlayer {
-            Check.notNull(channel, "Channel cannot be null");
-            Check.notNull(data, "Data cannot be null");
-            data = data.clone();
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (!(object instanceof ForwardToPlayer(String channel1, byte[] data1))) return false;
-            return channel().equals(channel1) && Arrays.equals(data(), data1);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = channel().hashCode();
-            result = 31 * result + Arrays.hashCode(data());
-            return result;
-        }
-    }
 }

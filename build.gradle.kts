@@ -21,6 +21,7 @@ dependencies {
 tasks {
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        modularity.inferModulePath.set(true)
     }
 
     javadoc {

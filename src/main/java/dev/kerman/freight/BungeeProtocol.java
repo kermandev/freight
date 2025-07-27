@@ -4,8 +4,6 @@ import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +31,7 @@ final class BungeeProtocol {
     static final NetworkBuffer.Type<byte[]> SHORT_BYTE_ARRAY_TYPE = new NetworkBuffer.Type<>() {
         // Reminder that they use big endian for IO, so we should be good as the protocol uses it too
         @Override
-        public void write(@NotNull NetworkBuffer buffer, byte[] value) {
+        public void write(@NotNull NetworkBuffer buffer, byte @NotNull [] value) {
             final int length = value.length;
             Check.argCondition(length > 65535, "Value too long");
             buffer.write(NetworkBuffer.UNSIGNED_SHORT, length);
@@ -54,7 +52,7 @@ final class BungeeProtocol {
     }
 
     // Reads the message from the buffer and checks if there are any leftover bytes
-    static <T extends BungeeMessage> T read(NetworkBuffer buffer, NetworkBuffer.Type<T> type) throws IllegalStateException {
+    static <T extends BungeeMessage> T read(@NotNull NetworkBuffer buffer, NetworkBuffer.@NotNull Type<T> type) throws IllegalStateException {
         final T read = buffer.read(type);
         final long readableBytes = buffer.readableBytes();
         if (readableBytes > 0) throw new IllegalStateException("%s message not fully read! %d bytes left over.".formatted(read.getClass().getName(), readableBytes));
@@ -95,7 +93,7 @@ final class BungeeProtocol {
 
         // Could probably use polymorphism here, but it makes the classes have less information about the serialization
         // See the entries in the regular ClientPacket and ServerPacket not caring about the id near the data structure.
-        static Type toType(BungeeMessage message) {
+        static @NotNull Type toType(@NotNull BungeeMessage message) {
             return switch (message) {
                 // Requests
                 case BungeeRequest.Connect ignored -> Connect;

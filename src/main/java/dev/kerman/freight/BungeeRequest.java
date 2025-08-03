@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 public sealed interface BungeeRequest extends BungeeMessage {
     @ApiStatus.Experimental
-    NetworkBuffer.Type<BungeeRequest> SERIALIZER = BungeeProtocol.Type.SERIALIZER
+    NetworkBuffer.Type<BungeeRequest> SERIALIZER = BungeeProtocol.Type.REQUEST_SERIALIZER
             .unionType(BungeeProtocol.Type::requestSerializer, BungeeProtocol.Type::toType);
 
     /**

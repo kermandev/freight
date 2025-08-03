@@ -1,6 +1,7 @@
 package dev.kerman.freight;
 
 import net.minestom.server.network.NetworkBuffer;
+import net.minestom.server.network.NetworkBufferTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,9 +80,17 @@ final class BungeeProtocol {
         Forward(BungeeRequest.Forward.SERIALIZER, BungeeResponse.Forward.SERIALIZER),
         ForwardToPlayer(BungeeRequest.ForwardToPlayer.SERIALIZER, BungeeResponse.Forward.SERIALIZER);
 
-        public static final NetworkBuffer.Type<Type> SERIALIZER = new NetworkBuffer.Type<>() {
+        // Always prefixed
+        public static final NetworkBuffer.Type<Type> REQUEST_SERIALIZER = NetworkBufferTemplate.template(
+                NetworkBuffer.STRING_IO_UTF8, Type::name,
+                Type::valueOf
+        );
+
+        // Sometimes unprefixed, so we need to handle that.
+        public static final NetworkBuffer.Type<Type> RESPONSE_SERIALIZER = new NetworkBuffer.Type<>() {
             @Override
             public void write(@NotNull NetworkBuffer buffer, Type value) {
+                if (value == Forward || value == ForwardToPlayer) return; // These are unprefixed, so we don't write the name.
                 buffer.write(NetworkBuffer.STRING_IO_UTF8, value.name());
             }
 

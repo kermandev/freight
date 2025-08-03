@@ -6,12 +6,12 @@ import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.packet.server.common.PluginMessagePacket;
 import net.minestom.testing.Env;
 import net.minestom.testing.EnvTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.UUID;
-
 
 import static dev.kerman.freight.BungeeResponse.Forward;
 import static dev.kerman.freight.BungeeResponse.GetPlayerServer;
@@ -71,5 +71,30 @@ public final class BungeeResponseTest { //TODO bin tests
             assertNotNull(readResponse);
             assertEquals(response, readResponse, "Response should be equal after reading from event");
         });
+    }
+
+    @Test
+    void testForwardSerialization() {
+        // Foward are a bit special as they are missing the type.
+        var response = new Forward("testServer", "Forwarded message".getBytes());
+        var data = BungeeMessage.writeResponse(response);
+        NetworkBuffer buffer = NetworkBuffer.resizableBuffer();
+        buffer.write(NetworkBuffer.RAW_BYTES, data);
+        var channel = buffer.read(NetworkBuffer.STRING_IO_UTF8);
+        assertEquals("testServer", channel, "Channel should be the first value in the framed packet, as expected by the BungeeCord protocol");
+        var readResponse = BungeeMessage.readResponse(data);
+        assertEquals(response, readResponse, "Forward response should be equal after reading from buffer");
+    }
+
+    @Test
+    void testType() {
+        var response = new IPOther("bob", "127.0.0.1", 65212);
+        var data = BungeeMessage.writeResponse(response);
+        NetworkBuffer buffer = NetworkBuffer.resizableBuffer();
+        buffer.write(NetworkBuffer.RAW_BYTES, data);
+        var type = buffer.read(NetworkBuffer.STRING_IO_UTF8);
+        assertEquals("IPOther", type, "Type should be 'IPOther' for the IP response");
+        var readResponse = BungeeMessage.readResponse(data);
+        assertEquals(response, readResponse, "IPOther response should be equal after reading from buffer");
     }
 }

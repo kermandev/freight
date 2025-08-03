@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 public sealed interface BungeeResponse extends BungeeMessage {
     @ApiStatus.Experimental
-    NetworkBuffer.Type<BungeeResponse> SERIALIZER = BungeeProtocol.Type.SERIALIZER
+    NetworkBuffer.Type<BungeeResponse> SERIALIZER = BungeeProtocol.Type.RESPONSE_SERIALIZER
             .unionType(BungeeProtocol.Type::responseSerializer, BungeeProtocol.Type::toType);
 
     /**

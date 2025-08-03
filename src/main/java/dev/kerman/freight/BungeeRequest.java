@@ -10,11 +10,11 @@ import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.NetworkBufferTemplate;
 import net.minestom.server.network.packet.client.common.ClientPluginMessagePacket;
 import net.minestom.server.network.packet.server.common.PluginMessagePacket;
-import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * BungeeCord request interface.
@@ -41,7 +41,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public Connect {
-            Check.notNull(serverName, "Server name cannot be null");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -59,8 +59,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public ConnectOther {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(serverName, "Server name cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
         }
 
         /**
@@ -93,7 +93,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public IPOther {
-            Check.notNull(playerName, "Player name cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
         }
 
         /**
@@ -117,7 +117,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public PlayerCount {
-            Check.notNull(serverName, "Server name cannot be null");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
         }
 
         /**
@@ -140,7 +140,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public PlayerList {
-            Check.notNull(serverName, "Server name cannot be null");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
         }
 
         /**
@@ -173,8 +173,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public Message {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(message, "Message cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            message = Objects.requireNonNull(message, "Message cannot be null");
         }
 
         /**
@@ -219,8 +219,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public MessageRaw {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(message, "Message cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            message = Objects.requireNonNull(message, "Message cannot be null");
         }
 
         /**
@@ -289,7 +289,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public GetPlayerServer {
-            Check.notNull(playerName, "Player name cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
         }
 
         public GetPlayerServer(@NotNull Pointered player) {
@@ -317,7 +317,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public UUIDOther {
-            Check.notNull(playerName, "Player name cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
         }
 
         public UUIDOther(@NotNull Pointered player) {
@@ -337,7 +337,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public ServerIP {
-            Check.notNull(serverName, "Server name cannot be null");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -355,8 +355,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public KickPlayer {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(reason, "Reason cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            reason = Objects.requireNonNull(reason, "Reason cannot be null");
         }
 
         /**
@@ -383,8 +383,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public KickPlayerRaw {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(reason, "Reason cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            reason = Objects.requireNonNull(reason, "Reason cannot be null");
         }
 
         /**
@@ -431,10 +431,11 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public Forward {
-            Check.notNull(serverName, "Server cannot be null");
-            Check.notNull(channel, "Channel cannot be null");
-            Check.notNull(data, "Data cannot be null");
-            Check.argCondition(data.length > 65535, "Data cannot be more than a 65535 in length");
+            serverName = Objects.requireNonNull(serverName, "Server cannot be null");
+            channel = Objects.requireNonNull(channel, "Channel cannot be null");
+            Objects.requireNonNull(data, "Data cannot be null");
+            if (data.length > 65535) // Check length before cloning
+                throw new IllegalArgumentException("Data cannot be more than 65535 in length");
             data = data.clone();
         }
 
@@ -526,10 +527,11 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public ForwardToPlayer {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(channel, "Channel cannot be null");
-            Check.notNull(data, "Data cannot be null");
-            Check.argCondition(data.length > 65535, "Data cannot be more than a 65535 in length");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            channel = Objects.requireNonNull(channel, "Channel cannot be null");
+            Objects.requireNonNull(data, "Data cannot be null");
+            if (data.length > 65535) // Check length before cloning
+                throw new IllegalArgumentException("Data cannot be more than 65535 in length");
             data = data.clone();
         }
 

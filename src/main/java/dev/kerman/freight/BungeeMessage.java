@@ -7,7 +7,6 @@ import net.minestom.server.network.packet.client.common.ClientPluginMessagePacke
 import net.minestom.server.network.packet.server.common.PluginMessagePacket;
 import net.minestom.server.network.player.PlayerConnection;
 import net.minestom.server.utils.PacketSendingUtils;
-import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * BungeeCord Messaging interface.
@@ -95,7 +95,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @return the byte array containing the serialized message
      */
     static byte @NotNull [] write(@NotNull BungeeMessage message) {
-        Check.notNull(message, "Message cannot be null");
+        Objects.requireNonNull(message, "Message cannot be null");
         return switch (message) {
             case BungeeRequest request -> writeRequest(request);
             case BungeeResponse response -> writeResponse(response);
@@ -112,7 +112,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @return the byte array containing the serialized request
      */
     static byte @NotNull [] writeRequest(@NotNull BungeeRequest request) {
-        Check.notNull(request, "Request cannot be null");
+        Objects.requireNonNull(request, "Request cannot be null");
         return NetworkBuffer.makeArray(BungeeRequest.SERIALIZER, request);
     }
 
@@ -125,7 +125,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     static @NotNull BungeeRequest readRequest(byte @NotNull [] bytes) throws IllegalStateException {
-        Check.notNull(bytes, "Bytes cannot be null!");
+        Objects.requireNonNull(bytes, "Bytes cannot be null!");
         return readRequest(NetworkBuffer.wrap(bytes, 0, bytes.length));
     }
 
@@ -138,7 +138,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     static @NotNull BungeeRequest readRequest(@NotNull NetworkBuffer buffer) throws IllegalStateException {
-        Check.notNull(buffer, "Buffer cannot be null!");
+        Objects.requireNonNull(buffer, "Buffer cannot be null!");
         return BungeeProtocol.read(buffer, BungeeRequest.SERIALIZER);
     }
 
@@ -151,7 +151,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @return the byte array containing the serialized response
      */
     static byte @NotNull [] writeResponse(@NotNull BungeeResponse response) {
-        Check.notNull(response, "Response cannot be null");
+        Objects.requireNonNull(response, "Response cannot be null");
         return NetworkBuffer.makeArray(BungeeResponse.SERIALIZER, response);
     }
 
@@ -163,7 +163,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     static @NotNull BungeeResponse readResponse(byte @NotNull [] bytes) throws IllegalStateException {
-        Check.notNull(bytes, "Bytes cannot be null!");
+        Objects.requireNonNull(bytes, "Bytes cannot be null!");
         return readResponse(NetworkBuffer.wrap(bytes, 0, bytes.length));
     }
 
@@ -176,7 +176,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     static @NotNull BungeeResponse readResponse(@NotNull NetworkBuffer buffer) throws IllegalStateException {
-        Check.notNull(buffer, "Buffer cannot be null!");
+        Objects.requireNonNull(buffer, "Buffer cannot be null!");
         return BungeeProtocol.read(buffer, BungeeResponse.SERIALIZER);
     }
 
@@ -191,7 +191,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     static @Nullable BungeeResponse readResponse(@NotNull PlayerPluginMessageEvent event) throws IllegalStateException {
-        Check.notNull(event, "Event cannot be null");
+        Objects.requireNonNull(event, "Event cannot be null");
         if (!isIdentifier(event.getIdentifier())) return null;
         return readResponse(event.getMessage());
     }
@@ -207,8 +207,8 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @param message    the message to send
      */
     static void send(@NotNull PlayerConnection connection, @NotNull BungeeMessage message) {
-        Check.notNull(connection, "Connection cannot be null");
-        Check.notNull(message, "Message cannot be null");
+        Objects.requireNonNull(connection, "Connection cannot be null");
+        Objects.requireNonNull(message, "Message cannot be null");
         connection.sendPacket(message.toPacket());
     }
 
@@ -222,8 +222,8 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @param message  the message to send
      */
     static void send(@NotNull Audience audience, @NotNull BungeeMessage message) {
-        Check.notNull(audience, "Audience cannot be null");
-        Check.notNull(message, "Message cannot be null");
+        Objects.requireNonNull(audience, "Audience cannot be null");
+        Objects.requireNonNull(message, "Message cannot be null");
         PacketSendingUtils.sendPacket(audience, message.toPacket());
     }
 
@@ -236,9 +236,9 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @throws IllegalArgumentException if the collection is empty
      */
     static void sendSingle(@NotNull Collection<? extends Audience> audiences, @NotNull BungeeMessage message) {
-        Check.notNull(audiences, "Audiences cannot be null");
-        Check.notNull(message, "Message cannot be null");
-        Check.argCondition(audiences.isEmpty(), "Audiences cannot be empty");
+        Objects.requireNonNull(audiences, "Audiences cannot be null");
+        Objects.requireNonNull(message, "Message cannot be null");
+        if (audiences.isEmpty()) throw new IllegalArgumentException("Audiences cannot be empty");
         List<Audience> collection = new ArrayList<>(audiences);
         Collections.shuffle(collection);
         BungeeMessage.send(collection.getFirst(), message);
@@ -278,7 +278,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @param connection the player connection to send the message to
      */
     default void send(@NotNull PlayerConnection connection) {
-        Check.notNull(connection, "Connection cannot be null");
+        Objects.requireNonNull(connection, "Connection cannot be null");
         BungeeMessage.send(connection, this);
     }
 
@@ -291,7 +291,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @param audience the audience to send the message
      */
     default void send(@NotNull Audience audience) {
-        Check.notNull(audience, "Audience cannot be null");
+        Objects.requireNonNull(audience, "Audience cannot be null");
         BungeeMessage.send(audience, this);
     }
 
@@ -305,8 +305,8 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * @throws IllegalArgumentException if the collection is empty
      */
     default void sendSingle(@NotNull Collection<? extends Audience> audiences) {
-        Check.notNull(audiences, "Audience cannot be null");
-        Check.argCondition(audiences.isEmpty(), "Audiences cannot be empty");
+        Objects.requireNonNull(audiences, "Audience cannot be null");
+        if (audiences.isEmpty()) throw new IllegalArgumentException("Audiences cannot be empty");
         BungeeMessage.sendSingle(audiences, this);
     }
 }

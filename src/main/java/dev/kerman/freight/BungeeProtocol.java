@@ -1,7 +1,6 @@
 package dev.kerman.freight;
 
 import net.minestom.server.network.NetworkBuffer;
-import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +32,7 @@ final class BungeeProtocol {
         @Override
         public void write(@NotNull NetworkBuffer buffer, byte @NotNull [] value) {
             final int length = value.length;
-            Check.argCondition(length > 65535, "Value too long");
+            if (length > 65535) throw new IllegalStateException("Value too long");
             buffer.write(NetworkBuffer.UNSIGNED_SHORT, length);
             buffer.write(NetworkBuffer.FixedRawBytes(length), value);
         }
@@ -41,8 +40,8 @@ final class BungeeProtocol {
         @Override
         public byte[] read(@NotNull NetworkBuffer buffer) {
             final int length = buffer.read(NetworkBuffer.UNSIGNED_SHORT);
-            Check.stateCondition(length > 65535, "Value too long");
-            Check.stateCondition(buffer.readableBytes() > length, "Value too long to read");
+            if (length > 65535) throw new IllegalStateException("Value too long");
+            if (buffer.readableBytes() > length) throw new IllegalStateException("Value too long to read");
             return buffer.read(NetworkBuffer.FixedRawBytes(length));
         }
     };

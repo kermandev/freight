@@ -3,12 +3,12 @@ package dev.kerman.freight;
 import net.minestom.server.event.player.PlayerPluginMessageEvent;
 import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.NetworkBufferTemplate;
-import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * BungeeCord response interface.
@@ -39,8 +39,9 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public IP {
-            Check.notNull(ip, "IP cannot be null");
-            Check.argCondition(port < 0 || port > 65535, "Port must be non negative and less than or equal to 65535");
+            ip = Objects.requireNonNull(ip, "IP cannot be null");
+            if (port < 0 || port > 65535)
+                throw new IllegalArgumentException("Port must be non negative and less than or equal to 65535");
         }
     }
 
@@ -60,9 +61,10 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public IPOther {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(ip, "IP cannot be null");
-            Check.argCondition(port <= 0 || port > 65535, "Port must be greater than 0 and less than or equal to 65535");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            ip = Objects.requireNonNull(ip, "IP cannot be null");
+            if (port < 0 || port > 65535)
+                throw new IllegalArgumentException("Port must be non negative and less than or equal to 65535");
         }
     }
 
@@ -80,8 +82,9 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public PlayerCount {
-            Check.notNull(serverName, "Server name cannot be null");
-            Check.argCondition(playerCount <= 0, "Player count must be greater than 0");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            if (playerCount <= 0)
+                throw new IllegalArgumentException("Player count must not be negative 0");
         }
     }
 
@@ -99,9 +102,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public PlayerList {
-            Check.notNull(serverName, "Server name cannot be null");
-            Check.notNull(playerNameList, "Player name list cannot be null");
-            playerNameList = List.copyOf(playerNameList);
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            playerNameList = List.copyOf(Objects.requireNonNull(playerNameList, "Player name list cannot be null"));
         }
     }
 
@@ -117,8 +119,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public GetServers {
-            Check.notNull(serverNames, "Server names cannot be null");
-            serverNames = List.copyOf(serverNames);
+            serverNames = List.copyOf(Objects.requireNonNull(serverNames, "Server names cannot be null"));
         }
     }
 
@@ -134,7 +135,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public GetServer {
-            Check.notNull(serverName, "Server name cannot be null");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -152,8 +153,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public GetPlayerServer {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(serverName, "Server name cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -169,7 +170,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public UUID {
-            Check.notNull(uuid, "UUID cannot be null");
+            uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
         }
     }
 
@@ -187,8 +188,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public UUIDOther {
-            Check.notNull(playerName, "Player name cannot be null");
-            Check.notNull(uuid, "UUID cannot be null");
+            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
         }
     }
 
@@ -208,10 +209,10 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public ServerIP {
-            Check.notNull(serverName, "Server name cannot be null");
-            Check.notNull(ip, "IP cannot be null");
-            // Port is an unsigned short (so we use an int).
-            Check.argCondition(port <= 0 || port > 65535, "Port must be greater than 0 and less than or equal to 65535");
+            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            ip = Objects.requireNonNull(ip, "IP cannot be null");
+            if (port <= 0 || port > 65535)
+                throw new IllegalArgumentException("Port must be greater than 0 and less than or equal to 65535");
         }
     }
 
@@ -229,9 +230,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public Forward {
-            Check.notNull(channel, "Channel cannot be null");
-            Check.notNull(data, "Data cannot be null");
-            data = data.clone();
+            channel = Objects.requireNonNull(channel, "Channel cannot be null");
+            data = Objects.requireNonNull(data, "Data cannot be null").clone();
         }
 
         @Override

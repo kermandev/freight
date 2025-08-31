@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.vanniktech.maven.publish") version "0.34.0"
+    alias(libs.plugins.maven.publish)
 }
 
 group = "dev.kerman"
@@ -13,6 +13,7 @@ repositories {
 dependencies {
     compileOnly(libs.minestom)
     compileOnly(libs.adventure)
+    compileOnly(libs.jetbrains.annotations)
     testImplementation(libs.minestom.testing)
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
@@ -28,6 +29,7 @@ tasks {
         (options as StandardJavadocDocletOptions).apply {
             links("https://javadoc.minestom.net/")
             links("https://jd.advntr.dev/api/${libs.versions.adventure.get()}/")
+            links("https://javadoc.io/doc/org.jetbrains/annotations/${libs.versions.jetbrains.annotations.get()}/")
         }
     }
 

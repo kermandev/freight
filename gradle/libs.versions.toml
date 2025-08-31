@@ -2,14 +2,26 @@
 minestom = "2025.08.29-1.21.8"
 adventure = "4.24.0"
 
-#Testing
+# Annotations
+jetbrains-annotations = "26.0.2"
+
+# Testing
 junit-bom = "5.13.4"
+
+# Publishing
+maven-publish = "0.34.0"
 
 [libraries]
 minestom = { module = "net.minestom:minestom", version.ref = "minestom" }
 adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 
+# Annotations
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
+
 # Testing
 minestom-testing = { module = "net.minestom:testing", version.ref = "minestom" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-bom" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-bom" }
+
+[plugins]
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }

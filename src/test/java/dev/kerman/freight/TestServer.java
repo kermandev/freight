@@ -9,7 +9,6 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerPluginMessageEvent;
-import net.minestom.server.extras.velocity.VelocityProxy;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.block.Block;
 
@@ -42,7 +41,7 @@ public class TestServer {
         commandHandler.register(new CommandTest());
         //BungeeCordProxy.enable();
         //BungeeCordProxy.setBungeeGuardTokens(Set.of("nosecret"));
-        VelocityProxy.enable("nosecret");
+        //VelocityProxy.enable("nosecret");
         minecraftserver.start("localhost", 25565);
     }
 

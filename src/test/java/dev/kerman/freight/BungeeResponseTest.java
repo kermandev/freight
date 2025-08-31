@@ -72,6 +72,7 @@ public final class BungeeResponseTest { //TODO bin tests
             assertNotNull(readResponse);
             assertEquals(response, readResponse, "Response should be equal after reading from event");
         });
+        player.tick(0); // Required or listeners would never fire.
     }
 
     @Test

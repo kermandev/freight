@@ -1,10 +1,9 @@
 [versions]
-minestom = "2025.07.26-1.21.8"
-adventure = "4.23.0"
+minestom = "2025.08.29-1.21.8"
+adventure = "4.24.0"
 
 #Testing
-junit-bom = "5.10.0"
-junit-jupiter = "1.10.0"
+junit-bom = "5.13.4"
 
 [libraries]
 minestom = { module = "net.minestom:minestom", version.ref = "minestom" }
@@ -13,4 +12,4 @@ adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 # Testing
 minestom-testing = { module = "net.minestom:testing", version.ref = "minestom" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-bom" }
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-bom" }

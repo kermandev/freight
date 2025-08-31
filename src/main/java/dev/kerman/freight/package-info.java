@@ -1,5 +1,5 @@
 /**
- * Provides core classes and interfaces for BungeeCord plugin messaging in Minestom.
+ * Messaging interfaces for BungeeCord plugin messaging in Minestom.
  * <p>
  * This package contains the main API for sending and receiving BungeeCord plugin messages,
  * including type-safe request and response objects, and integration with Minestom's event system.
@@ -11,4 +11,7 @@
  *   <li>{@link dev.kerman.freight.BungeeResponse}</li>
  * </ul>
  */
+@NotNullByDefault
 package dev.kerman.freight;
+
+import org.jetbrains.annotations.NotNullByDefault;

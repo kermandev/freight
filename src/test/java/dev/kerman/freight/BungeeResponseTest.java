@@ -26,6 +26,7 @@ import static dev.kerman.freight.BungeeResponse.UUIDOther;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @EnvTest
 public final class BungeeResponseTest { //TODO bin tests
@@ -75,7 +76,7 @@ public final class BungeeResponseTest { //TODO bin tests
 
     @Test
     void testForwardSerialization() {
-        // Foward are a bit special as they are missing the type.
+        // Forward are a bit special as they are missing the type.
         var response = new Forward("testServer", "Forwarded message".getBytes());
         var data = BungeeMessage.writeResponse(response);
         NetworkBuffer buffer = NetworkBuffer.resizableBuffer();
@@ -96,5 +97,15 @@ public final class BungeeResponseTest { //TODO bin tests
         assertEquals("IPOther", type, "Type should be 'IPOther' for the IP response");
         var readResponse = BungeeMessage.readResponse(data);
         assertEquals(response, readResponse, "IPOther response should be equal after reading from buffer");
+    }
+
+    @Test
+    void testLargeForwards() {
+        assertDoesNotThrow(() -> {
+            new Forward("testServer", new byte[65535]);
+        }, "Message format supports 65535 bytes");
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Forward("testServer", new byte[65535 + 1]);
+        }, "Message format supports at most 65535 bytes");
     }
 }

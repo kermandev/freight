@@ -11,7 +11,7 @@ import net.minestom.server.network.NetworkBufferTemplate;
 import net.minestom.server.network.packet.client.common.ClientPluginMessagePacket;
 import net.minestom.server.network.packet.server.common.PluginMessagePacket;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -33,7 +33,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Connects the sending audience to a server.
      * @param serverName Server name to connect to. (Defined in your proxy config)
      */
-    record Connect(@NotNull String serverName) implements BungeeRequest {
+    record Connect(String serverName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<Connect> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, Connect::serverName,
@@ -41,7 +41,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public Connect {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -50,7 +50,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * @param playerName Player name to connect.
      * @param serverName Server name to connect to. (Defined in your proxy config)
      */
-    record ConnectOther(@NotNull String playerName, @NotNull String serverName) implements BungeeRequest {
+    record ConnectOther(String playerName, String serverName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<ConnectOther> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, ConnectOther::playerName,
@@ -59,8 +59,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public ConnectOther {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
         }
 
         /**
@@ -68,7 +68,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to connect.
          * @param serverName Server name to connect to. (Defined in your proxy config)
          */
-        public ConnectOther(@NotNull Pointered player, @NotNull String serverName) {
+        public ConnectOther(Pointered player, String serverName) {
             this(player.get(Identity.NAME).orElseThrow(), serverName);
         }
     }
@@ -85,7 +85,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Requests the IP address of a player.
      * @param playerName The name
      */
-    record IPOther(@NotNull String playerName) implements BungeeRequest {
+    record IPOther(String playerName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<IPOther> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, IPOther::playerName,
@@ -93,23 +93,25 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public IPOther {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
         }
 
         /**
          * Creates an IPOther request for a player.
          * @param player The player to get the IP address for.
          */
-        public IPOther(@NotNull Pointered player) {
+        public IPOther(Pointered player) {
             this(player.get(Identity.NAME).orElseThrow());
         }
     }
 
     /**
      * Requests the player count of a server.
-     * @param serverName Player count of that server (Defined in your proxy config)
+     * <br>
+     * You can get player count responses for all servers sending a {@link #all()} request.
+     * @param serverName Player count of that server (Defined in your proxy config) or ALL for all defined servers.
      */
-    record PlayerCount(@NotNull String serverName) implements BungeeRequest {
+    record PlayerCount(String serverName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<PlayerCount> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, PlayerCount::serverName,
@@ -117,22 +119,28 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public PlayerCount {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
         }
 
         /**
-         * @return A PlayerCount request for all players.
+         * A {@link PlayerCount} request for all players.
+         * <br>
+         * Expect multiple responses if there is more than one server with players on it.
+         * @return A {@link PlayerCount} request for all players.
          */
-        static @NotNull PlayerCount all() {
+        @Contract(pure = true)
+        static PlayerCount all() {
             return new PlayerCount(ALL);
         }
     }
 
     /**
      * Requests the player list of a server.
+     * <br>
+     * You can get player list responses for all servers sending a {@link #all()} request.
      * @param serverName Player list of that server (Defined in your proxy config)
      */
-    record PlayerList(@NotNull String serverName) implements BungeeRequest {
+    record PlayerList(String serverName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<PlayerList> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, PlayerList::serverName,
@@ -140,13 +148,17 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public PlayerList {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
         }
 
         /**
-         * @return A PlayerList request for all players.
+         * A {@link PlayerList} request for all players.
+         * <br>
+         * Expect multiple responses if there is more than one server with players on it.
+         * @return A {@link PlayerList} request for all players.
          */
-        static @NotNull PlayerList all() {
+        @Contract(pure = true)
+        static PlayerList all() {
             return new PlayerList(ALL);
         }
     }
@@ -164,7 +176,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * @param playerName The name of the player to send the message to.
      * @param message The message to send to the player.
      */
-    record Message(@NotNull String playerName, @NotNull String message) implements BungeeRequest {
+    record Message(String playerName, String message) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<Message> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, Message::playerName,
@@ -173,8 +185,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public Message {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            message = Objects.requireNonNull(message, "Message cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(message, "Message cannot be null");
         }
 
         /**
@@ -182,7 +194,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to send the message to.
          * @param message The message to send to the player.
          */
-        public Message(@NotNull Pointered player, @NotNull String message) {
+        public Message(Pointered player, String message) {
             this(player.get(Identity.NAME).orElseThrow(), message);
         }
 
@@ -191,7 +203,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to send the message to.
          * @param message The message to send to the player as legacy text.
          */
-        public Message(@NotNull Pointered player, @NotNull Component message) {
+        public Message(Pointered player, Component message) {
             this(player.get(Identity.NAME).orElseThrow(), LegacyComponentSerializer.legacySection().serialize(message));
         }
 
@@ -200,7 +212,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param message The message to send to all players.
          * @return A Message request for all players.
          */
-        static @NotNull Message all(@NotNull String message) {
+        @Contract(pure = true)
+        static Message all(String message) {
             return new Message(ALL, message);
         }
     }
@@ -210,7 +223,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * @param playerName The name of the player to send the raw message to.
      * @param message The raw message to send to the player formatted as JSON.
      */
-    record MessageRaw(@NotNull String playerName, @NotNull String message) implements BungeeRequest {
+    record MessageRaw(String playerName, String message) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<MessageRaw> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, MessageRaw::playerName,
@@ -219,8 +232,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public MessageRaw {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            message = Objects.requireNonNull(message, "Message cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(message, "Message cannot be null");
         }
 
         /**
@@ -228,7 +241,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to send the raw message to.
          * @param message The raw message to send to the player formatted as JSON.
          */
-        public MessageRaw(@NotNull Pointered player, @NotNull String message) {
+        public MessageRaw(Pointered player, String message) {
             this(player.get(Identity.NAME).orElseThrow(), message);
         }
 
@@ -237,7 +250,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param playerName The name of the player to send the raw message to.
          * @param message The raw message to send to the player formatted as JSON.
          */
-        public MessageRaw(@NotNull String playerName, @NotNull Component message) {
+        public MessageRaw(String playerName, Component message) {
             this(playerName, GsonComponentSerializer.gson().serialize(message));
         }
 
@@ -246,7 +259,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to send the raw message to.
          * @param message The raw message to send to the player formatted as JSON.
          */
-        public MessageRaw(@NotNull Pointered player, @NotNull Component message) {
+        public MessageRaw(Pointered player, Component message) {
             this(player.get(Identity.NAME).orElseThrow(), GsonComponentSerializer.gson().serialize(message));
         }
 
@@ -255,7 +268,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param message The message to send to all players.
          * @return A MessageRaw request for all players.
          */
-        static @NotNull MessageRaw all(@NotNull String message) {
+        @Contract(pure = true)
+        static MessageRaw all(String message) {
             return new MessageRaw(ALL, message);
         }
 
@@ -264,7 +278,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param message The message to send to all players.
          * @return A MessageRaw request for all players.
          */
-        static @NotNull MessageRaw all(@NotNull Component message) {
+        @Contract(pure = true)
+        static MessageRaw all(Component message) {
             return new MessageRaw(ALL, message);
         }
     }
@@ -281,7 +296,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Requests the server a player is connected to.
      * @param playerName The name of the player to get the server for.
      */
-    record GetPlayerServer(@NotNull String playerName) implements BungeeRequest {
+    record GetPlayerServer(String playerName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<GetPlayerServer> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, GetPlayerServer::playerName,
@@ -289,10 +304,10 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public GetPlayerServer {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
         }
 
-        public GetPlayerServer(@NotNull Pointered player) {
+        public GetPlayerServer(Pointered player) {
             this(player.get(Identity.NAME).orElseThrow());
         }
     }
@@ -309,7 +324,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Requests the UUID of a player.
      * @param playerName The name of the player to get the UUID for.
      */
-    record UUIDOther(@NotNull String playerName) implements BungeeRequest {
+    record UUIDOther(String playerName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<UUIDOther> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, UUIDOther::playerName,
@@ -317,10 +332,10 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public UUIDOther {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
         }
 
-        public UUIDOther(@NotNull Pointered player) {
+        public UUIDOther(Pointered player) {
             this(player.get(Identity.NAME).orElseThrow());
         }
     }
@@ -329,7 +344,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Requests the IP address and port of a server.
      * @param serverName The name of the server to get the IP and port for. (Defined in your proxy config)
      */
-    record ServerIP(@NotNull String serverName) implements BungeeRequest {
+    record ServerIP(String serverName) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<ServerIP> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, ServerIP::serverName,
@@ -337,7 +352,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public ServerIP {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -346,7 +361,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * @param playerName The name of the player to kick.
      * @param reason The reason for kicking the player.
      */
-    record KickPlayer(@NotNull String playerName, @NotNull String reason) implements BungeeRequest {
+    record KickPlayer(String playerName, String reason) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<KickPlayer> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, KickPlayer::playerName,
@@ -355,8 +370,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public KickPlayer {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            reason = Objects.requireNonNull(reason, "Reason cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(reason, "Reason cannot be null");
         }
 
         /**
@@ -364,7 +379,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to kick.
          * @param message The reason for kicking the player.
          */
-        public KickPlayer(@NotNull Pointered player, @NotNull String message) {
+        public KickPlayer(Pointered player, String message) {
             this(player.get(Identity.NAME).orElseThrow(), message);
         }
     }
@@ -374,7 +389,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * @param playerName The name of the player to kick.
      * @param reason The reason for kicking the player as a JSON string.
      */
-    record KickPlayerRaw(@NotNull String playerName, @NotNull String reason) implements BungeeRequest {
+    record KickPlayerRaw(String playerName, String reason) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<KickPlayerRaw> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, KickPlayerRaw::playerName,
@@ -383,8 +398,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public KickPlayerRaw {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            reason = Objects.requireNonNull(reason, "Reason cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(reason, "Reason cannot be null");
         }
 
         /**
@@ -392,7 +407,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to kick.
          * @param message The reason for kicking the player.
          */
-        public KickPlayerRaw(@NotNull Pointered player, @NotNull String message) {
+        public KickPlayerRaw(Pointered player, String message) {
             this(player.get(Identity.NAME).orElseThrow(), message);
         }
 
@@ -401,7 +416,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param playerName The name of the player to kick.
          * @param message The reason for kicking the player.
          */
-        public KickPlayerRaw(@NotNull String playerName, @NotNull Component message) {
+        public KickPlayerRaw(String playerName, Component message) {
             this(playerName, GsonComponentSerializer.gson().serialize(message));
         }
 
@@ -410,18 +425,22 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to kick.
          * @param message The reason for kicking the player.
          */
-        public KickPlayerRaw(@NotNull Pointered player, @NotNull Component message) {
+        public KickPlayerRaw(Pointered player, Component message) {
             this(player.get(Identity.NAME).orElseThrow(), GsonComponentSerializer.gson().serialize(message));
         }
     }
 
     /**
-     * Forwards data to a server or all servers.
+     * Forwards data to a server or all servers. (Always excluding the current one)
+     * <br>
+     * Forward it to a specific player using {@link ForwardToPlayer},
+     * use {@link #all(PluginMessagePacket)} to send a single message to all servers,
+     * or {@link #online(PluginMessagePacket)} to send to online servers
      * @param serverName The name of the server to forward the data to. Supports ALL and ONLINE.
      * @param channel The channel to forward the data to.
      * @param data The data to forward.
      */
-    record Forward(@NotNull String serverName, @NotNull String channel, byte @NotNull [] data) implements BungeeRequest {
+    record Forward(String serverName, String channel, byte[] data) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<Forward> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, Forward::serverName,
@@ -431,8 +450,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public Forward {
-            serverName = Objects.requireNonNull(serverName, "Server cannot be null");
-            channel = Objects.requireNonNull(channel, "Channel cannot be null");
+            Objects.requireNonNull(serverName, "Server cannot be null");
+            Objects.requireNonNull(channel, "Channel cannot be null");
             Objects.requireNonNull(data, "Data cannot be null");
             if (data.length > 65535) // Check length before cloning
                 throw new IllegalArgumentException("Data cannot be more than 65535 in length");
@@ -440,58 +459,64 @@ public sealed interface BungeeRequest extends BungeeMessage {
         }
 
         /**
-         * Creates a Forward request for all servers. (excluding the server this request is sent from)
+         * Creates a {@link Forward} request for all servers. (excluding the server this request is sent from)
          * @param channel The channel to forward the data to.
          * @param data The data to forward.
-         * @return A Forward request for all servers.
+         * @return A {@link Forward} request for all servers.
          */
-        static @NotNull Forward all(@NotNull String channel, byte @NotNull [] data) {
+        @Contract(pure = true)
+        static Forward all(String channel, byte[] data) {
             return new Forward(ALL, channel, data);
         }
 
         /**
-         * Creates a Forward request for all servers. (excluding the server this request is sent from)
+         * Creates a {@link Forward} request for all servers. (excluding the server this request is sent from)
          * @param packet The PluginMessagePacket to forward.
-         * @return A Forward request for all servers.
+         * @return A {@link Forward} request for all servers.
          */
-        static @NotNull Forward all(@NotNull PluginMessagePacket packet) {
+        @Contract(pure = true)
+        static Forward all(PluginMessagePacket packet) {
             return all(packet.channel(), packet.data());
         }
 
         /**
-         * Creates a Forward request for all servers. (excluding the server this request is sent from)
+         * Creates a {@link Forward} request for all servers. (excluding the server this request is sent from)
          * @param packet The ClientPluginMessagePacket to forward.
-         * @return A Forward request for all servers.
+         * @return A {@link Forward} request for all servers.
          */
-        static @NotNull Forward all(@NotNull ClientPluginMessagePacket packet) {
+        @Contract(pure = true)
+        static Forward all(ClientPluginMessagePacket packet) {
             return all(packet.channel(), packet.data());
         }
 
         /**
-         * Creates a Forward request for the online server. (excluding the server this request is sent from)
+         * Creates a {@link Forward} request for the online server. (excluding the server this request is sent from)
          * @param channel The channel to forward the data to.
          * @param data The data to forward.
-         * @return A Forward request for the online server.
+         * @return A {@link Forward} request for the online server.
          */
-        static @NotNull Forward online(@NotNull String channel, byte @NotNull [] data) {
+        @Contract(pure = true)
+        static Forward online(String channel, byte[] data) {
             return new Forward(ONLINE, channel, data);
         }
 
         /**
-         * Creates a Forward request for the online server. (excluding the server this request is sent from)
+         * Creates a {@link Forward} request for the online server. (excluding the server this request is sent from)
          * @param packet The PluginMessagePacket to forward.
-         * @return A Forward request for the online server.
+         * @return A {@link Forward} request for the online server.
          */
-        static @NotNull Forward online(@NotNull PluginMessagePacket packet) {
+        @Contract(pure = true)
+        static Forward online(PluginMessagePacket packet) {
             return online(packet.channel(), packet.data());
         }
 
         /**
-         * Creates a Forward request for the online server. (excluding the server this request is sent from)
+         * Creates a {@link Forward} request for the online server. (excluding the server this request is sent from)
          * @param packet The ClientPluginMessagePacket to forward.
-         * @return A Forward request for the online server.
+         * @return A {@link Forward} request for the online server.
          */
-        static @NotNull Forward online(@NotNull ClientPluginMessagePacket packet) {
+        @Contract(pure = true)
+        static Forward online(ClientPluginMessagePacket packet) {
             return online(packet.channel(), packet.data());
         }
 
@@ -512,12 +537,14 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Forwards data to a specific player.
+     * <br>
+     * Note: The response for this is the same as {@link Forward} as BungeeCord provides no way to differ the requests.
      * @param playerName The name of the player to forward the data to.
      * @param channel The channel to forward the data to.
      * @param data The data to forward.
      */
-    record ForwardToPlayer(@NotNull String playerName, @NotNull String channel,
-                           byte @NotNull [] data) implements BungeeRequest {
+    record ForwardToPlayer(String playerName, String channel,
+                           byte[] data) implements BungeeRequest {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<ForwardToPlayer> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, ForwardToPlayer::playerName,
@@ -527,8 +554,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
         );
 
         public ForwardToPlayer {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            channel = Objects.requireNonNull(channel, "Channel cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(channel, "Channel cannot be null");
             Objects.requireNonNull(data, "Data cannot be null");
             if (data.length > 65535) // Check length before cloning
                 throw new IllegalArgumentException("Data cannot be more than 65535 in length");
@@ -541,7 +568,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param channel The channel to forward the data to.
          * @param data The data to forward.
          */
-        public ForwardToPlayer(@NotNull Pointered player, @NotNull String channel, byte @NotNull [] data) {
+        public ForwardToPlayer(Pointered player, String channel, byte[] data) {
             this(player.get(Identity.NAME).orElseThrow(), channel, data);
         }
 
@@ -550,7 +577,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param playerName The name of the player to forward the data to.
          * @param message The PluginMessagePacket to forward.
          */
-        public ForwardToPlayer(@NotNull String playerName, @NotNull PluginMessagePacket message) {
+        public ForwardToPlayer(String playerName, PluginMessagePacket message) {
             this(playerName, message.channel(), message.data());
         }
 
@@ -559,7 +586,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to forward the data to.
          * @param message The PluginMessagePacket to forward.
          */
-        public ForwardToPlayer(@NotNull Pointered player, @NotNull PluginMessagePacket message) {
+        public ForwardToPlayer(Pointered player, PluginMessagePacket message) {
             this(player, message.channel(), message.data());
         }
 
@@ -568,7 +595,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param playerName The name of the player to forward the data to.
          * @param message The ClientPluginMessagePacket to forward.
          */
-        public ForwardToPlayer(@NotNull String playerName, @NotNull ClientPluginMessagePacket message) {
+        public ForwardToPlayer(String playerName, ClientPluginMessagePacket message) {
             this(playerName, message.channel(), message.data());
         }
 
@@ -577,7 +604,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * @param player The player to forward the data to.
          * @param message The ClientPluginMessagePacket to forward.
          */
-        public ForwardToPlayer(@NotNull Pointered player, @NotNull ClientPluginMessagePacket message) {
+        public ForwardToPlayer(Pointered player, ClientPluginMessagePacket message) {
             this(player, message.channel(), message.data());
         }
 

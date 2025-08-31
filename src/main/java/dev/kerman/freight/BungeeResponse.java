@@ -4,7 +4,6 @@ import net.minestom.server.event.player.PlayerPluginMessageEvent;
 import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.NetworkBufferTemplate;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +29,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param ip the IP address of the server
      * @param port the port of the server, must be non-negative and less than or equal to 65535
      */
-    record IP(@NotNull String ip, int port) implements BungeeResponse {
+    record IP(String ip, int port) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<IP> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, IP::ip,
@@ -51,7 +50,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param ip the IP address of the player
      * @param port the port of the player, must be non-negative and less than or equal to 65535
      */
-    record IPOther(@NotNull String playerName, @NotNull String ip, int port) implements BungeeResponse {
+    record IPOther(String playerName, String ip, int port) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<IPOther> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, IPOther::playerName,
@@ -73,7 +72,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param serverName the name of the server
      * @param playerCount the number of players online, must be greater than 0
      */
-    record PlayerCount(@NotNull String serverName, int playerCount) implements BungeeResponse {
+    record PlayerCount(String serverName, int playerCount) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<PlayerCount> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, PlayerCount::serverName,
@@ -82,7 +81,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public PlayerCount {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
             if (playerCount <= 0)
                 throw new IllegalArgumentException("Player count must not be negative 0");
         }
@@ -93,7 +92,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param serverName the name of the server
      * @param playerNameList the list of player names, must not be null or empty
      */
-    record PlayerList(@NotNull String serverName, @NotNull List<String> playerNameList) implements BungeeResponse {
+    record PlayerList(String serverName, List<String> playerNameList) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<PlayerList> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, PlayerList::serverName,
@@ -102,8 +101,9 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public PlayerList {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
-            playerNameList = List.copyOf(Objects.requireNonNull(playerNameList, "Player name list cannot be null"));
+            Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(playerNameList, "Player name list cannot be null");
+            playerNameList = List.copyOf(playerNameList);
         }
     }
 
@@ -111,7 +111,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * A response containing a list of server names.
      * @param serverNames the list of server names (As defined in the proxy config)
      */
-    record GetServers(@NotNull List<String> serverNames) implements BungeeResponse {
+    record GetServers(List<String> serverNames) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<GetServers> SERIALIZER = NetworkBufferTemplate.template(
                 BungeeProtocol.CSV_TYPE, GetServers::serverNames,
@@ -119,7 +119,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public GetServers {
-            serverNames = List.copyOf(Objects.requireNonNull(serverNames, "Server names cannot be null"));
+            Objects.requireNonNull(serverNames, "Server names cannot be null");
+            serverNames = List.copyOf(serverNames);
         }
     }
 
@@ -127,7 +128,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * A response containing the server name.
      * @param serverName the name of the server
      */
-    record GetServer(@NotNull String serverName) implements BungeeResponse {
+    record GetServer(String serverName) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<GetServer> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, GetServer::serverName,
@@ -135,7 +136,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public GetServer {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -144,7 +145,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param playerName the name of the player
      * @param serverName the name of the server
      */
-    record GetPlayerServer(@NotNull String playerName, @NotNull String serverName) implements BungeeResponse {
+    record GetPlayerServer(String playerName, String serverName) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<GetPlayerServer> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, GetPlayerServer::playerName,
@@ -153,8 +154,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public GetPlayerServer {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
         }
     }
 
@@ -162,7 +163,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * A response containing a UUID.
      * @param uuid the UUID of the player, must not be null
      */
-    record UUID(@NotNull java.util.UUID uuid) implements BungeeResponse {
+    record UUID(java.util.UUID uuid) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<UUID> SERIALIZER = NetworkBufferTemplate.template(
                 BungeeProtocol.UUID_TYPE, UUID::uuid,
@@ -170,7 +171,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public UUID {
-            uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
+            Objects.requireNonNull(uuid, "UUID cannot be null");
         }
     }
 
@@ -179,7 +180,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param playerName
      * @param uuid
      */
-    record UUIDOther(@NotNull String playerName, @NotNull java.util.UUID uuid) implements BungeeResponse {
+    record UUIDOther(String playerName, java.util.UUID uuid) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<UUIDOther> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, UUIDOther::playerName,
@@ -188,8 +189,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public UUIDOther {
-            playerName = Objects.requireNonNull(playerName, "Player name cannot be null");
-            uuid = Objects.requireNonNull(uuid, "UUID cannot be null");
+            Objects.requireNonNull(playerName, "Player name cannot be null");
+            Objects.requireNonNull(uuid, "UUID cannot be null");
         }
     }
 
@@ -199,7 +200,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param ip the IP address of the server
      * @param port the port of the server, must be greater than 0 and less than or equal to 65535
      */
-    record ServerIP(@NotNull String serverName, @NotNull String ip, int port) implements BungeeResponse {
+    record ServerIP(String serverName, String ip, int port) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<ServerIP> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, ServerIP::serverName,
@@ -209,8 +210,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public ServerIP {
-            serverName = Objects.requireNonNull(serverName, "Server name cannot be null");
-            ip = Objects.requireNonNull(ip, "IP cannot be null");
+            Objects.requireNonNull(serverName, "Server name cannot be null");
+            Objects.requireNonNull(ip, "IP cannot be null");
             if (port <= 0 || port > 65535)
                 throw new IllegalArgumentException("Port must be greater than 0 and less than or equal to 65535");
         }
@@ -221,7 +222,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
      * @param channel the channel forwarded
      * @param data the data forwarded
      */
-    record Forward(@NotNull String channel, byte @NotNull [] data) implements BungeeResponse {
+    record Forward(String channel, byte[] data) implements BungeeResponse {
         @ApiStatus.Experimental
         public static final NetworkBuffer.Type<Forward> SERIALIZER = NetworkBufferTemplate.template(
                 NetworkBuffer.STRING_IO_UTF8, Forward::channel,
@@ -230,8 +231,11 @@ public sealed interface BungeeResponse extends BungeeMessage {
         );
 
         public Forward {
-            channel = Objects.requireNonNull(channel, "Channel cannot be null");
-            data = Objects.requireNonNull(data, "Data cannot be null").clone();
+            Objects.requireNonNull(channel, "Channel cannot be null");
+            Objects.requireNonNull(data, "Data cannot be null");
+            if (data.length > 65535) // Check length before cloning
+                throw new IllegalArgumentException("Data cannot be more than 65535 in length");
+            data = data.clone();
         }
 
         @Override

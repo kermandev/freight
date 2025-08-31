@@ -8,6 +8,7 @@ import net.minestom.server.network.packet.server.common.PluginMessagePacket;
 import net.minestom.testing.Env;
 import net.minestom.testing.EnvTest;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -33,6 +34,7 @@ import static dev.kerman.freight.BungeeRequest.UUID;
 import static dev.kerman.freight.BungeeRequest.UUIDOther;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @EnvTest
 public final class BungeeRequestTest { //TODO bin tests
@@ -50,7 +52,7 @@ public final class BungeeRequestTest { //TODO bin tests
                 new GetServer(),
                 new GetPlayerServer("playerName"),
                 new UUID(),
-                new UUIDOther("testplayer"),
+                new UUIDOther("playerName"),
                 new ServerIP("testServer"),
                 new KickPlayer("playerName", "You have been kicked!"),
                 new KickPlayerRaw("playerName", Component.text("YOU WERE KICKED!!!")),
@@ -85,5 +87,21 @@ public final class BungeeRequestTest { //TODO bin tests
             Assertions.assertNotNull(request);
             Assertions.assertEquals(message, request, "Request should be equal after reading from packet");
         });
+    }
+
+    @Test
+    void testLargeForwards() {
+        assertDoesNotThrow(() -> {
+            new Forward("testServer", "test", new byte[65535]);
+        }, "Message format supports 65535 bytes");
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Forward("testServer", "test", new byte[65535 + 1]);
+        }, "Message format supports at most 65535 bytes");
+        assertDoesNotThrow(() -> {
+            new ForwardToPlayer("playerName", "test", new byte[65535]);
+        }, "Message format supports 65535 bytes");
+        assertThrows(IllegalArgumentException.class, () -> {
+            new ForwardToPlayer("playerName", "test", new byte[65535 + 1]);
+        }, "Message format supports at most 65535 bytes");
     }
 }

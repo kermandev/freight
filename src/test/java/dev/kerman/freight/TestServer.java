@@ -1,5 +1,6 @@
 package dev.kerman.freight;
 
+import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.builder.Command;
@@ -13,11 +14,26 @@ import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.block.Block;
 
 import java.util.Arrays;
+import java.util.Set;
 
 public class TestServer {
 
-    public static void main(String[] args) {
-        MinecraftServer minecraftserver = MinecraftServer.init();
+    static void main(String[] args) {
+        if (args.length == 0) {
+            System.err.println("Usage: TestServer <bungeecord/bungeegaurd/velocity/online/offline>");
+            return;
+        }
+
+        Auth auth = switch (args[0]) {
+            case "bungeecord" -> new Auth.Bungee();
+            case "bungeegaurd" -> new Auth.Bungee(Set.of("nosecret"));
+            case "velocity" -> new Auth.Velocity("nosecret");
+            case "online" -> new Auth.Online();
+            case "offline" -> new Auth.Offline();
+            default -> throw new IllegalStateException("Unexpected value: " + args[0]);
+        };
+
+        MinecraftServer minecraftserver = MinecraftServer.init(auth);
 
         var instanceContainer = MinecraftServer.getInstanceManager().createInstanceContainer();
         instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 40, Block.STONE));
@@ -39,9 +55,6 @@ public class TestServer {
 
         var commandHandler = MinecraftServer.getCommandManager();
         commandHandler.register(new CommandTest());
-        //BungeeCordProxy.enable();
-        //BungeeCordProxy.setBungeeGuardTokens(Set.of("nosecret"));
-        //VelocityProxy.enable("nosecret");
         minecraftserver.start("localhost", 25565);
     }
 

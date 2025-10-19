@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.kerman"
-version = "1.5.0"
+version = "1.6.0"
 
 repositories {
     mavenCentral()
@@ -21,7 +21,7 @@ dependencies {
 
 tasks {
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
         modularity.inferModulePath.set(true)
     }
 

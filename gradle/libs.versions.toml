@@ -1,6 +1,6 @@
 [versions]
 minestom = "2025.10.18-1.21.10"
-adventure = "4.25.0"
+adventure = "4.26.1"
 
 # Annotations
 jetbrains-annotations = "26.0.2-1"

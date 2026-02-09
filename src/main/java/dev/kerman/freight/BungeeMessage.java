@@ -85,12 +85,11 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
 
     /**
      * Checks if the given channel is a valid BungeeCord identifier.
-     * <p>Valid identifiers are:
+     * <p>Valid identifiers are:</p>
      * <ul>
      *     <li>{@code BungeeCord} (the default channel)</li>
      *     <li>{@code bungeecord:main} (since 1.13)</li>
      * </ul>
-     * </p>
      *
      * @param channel the channel to check, can be null
      * @return true if the channel is a valid BungeeCord identifier, false otherwise

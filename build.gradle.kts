@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.kerman"
-version = "1.6.1"
+version = findProperty("version") ?: "dev"
 
 repositories {
     mavenCentral()
@@ -43,7 +43,7 @@ tasks {
 }
 
 mavenPublishing {
-    publishToMavenCentral(automaticRelease = !version.toString().contains("SNAPSHOT"))
+    publishToMavenCentral(automaticRelease = !version.toString().contains("v"))
     signAllPublications()
 
     pom {

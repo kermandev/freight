@@ -50,6 +50,9 @@ final class BungeeProtocol {
         }
     };
 
+    private BungeeProtocol() {
+    }
+
     static boolean isIdentifier(@Nullable String channel) {
         return CHANNEL_LEGACY.equals(channel) || CHANNEL_MODERN.equals(channel);
     }
@@ -58,7 +61,8 @@ final class BungeeProtocol {
     static <T extends BungeeMessage> T read(NetworkBuffer buffer, NetworkBuffer.Type<T> type) throws IllegalStateException {
         final T read = buffer.read(type);
         final long readableBytes = buffer.readableBytes();
-        if (readableBytes > 0) throw new IllegalStateException("%s message not fully read! %d bytes left over.".formatted(read.getClass().getName(), readableBytes));
+        if (readableBytes > 0)
+            throw new IllegalStateException("%s message not fully read! %d bytes left over.".formatted(read.getClass().getName(), readableBytes));
         return read;
     }
 
@@ -93,7 +97,8 @@ final class BungeeProtocol {
         public static final NetworkBuffer.Type<Type> RESPONSE_SERIALIZER = new NetworkBuffer.Type<>() {
             @Override
             public void write(NetworkBuffer buffer, Type value) {
-                if (value == Forward || value == ForwardToPlayer) return; // These are unprefixed, so we don't write the name.
+                if (value == Forward || value == ForwardToPlayer)
+                    return; // These are unprefixed, so we don't write the name.
                 buffer.write(NetworkBuffer.STRING_IO_UTF8, value.name());
             }
 
@@ -164,6 +169,4 @@ final class BungeeProtocol {
             return requestSerializer;
         }
     }
-
-    private BungeeProtocol() {}
 }

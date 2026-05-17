@@ -31,6 +31,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Connects the sending audience to a server.
+     *
      * @param serverName Server name to connect to. (Defined in your proxy config)
      */
     record Connect(String serverName) implements BungeeRequest {
@@ -47,6 +48,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Connects a player to a server.
+     *
      * @param playerName Player name to connect.
      * @param serverName Server name to connect to. (Defined in your proxy config)
      */
@@ -65,7 +67,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a ConnectOther request for a player.
-         * @param player The player to connect.
+         *
+         * @param player     The player to connect.
          * @param serverName Server name to connect to. (Defined in your proxy config)
          */
         public ConnectOther(Pointered player, String serverName) {
@@ -83,6 +86,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Requests the IP address of a player.
+     *
      * @param playerName The name
      */
     record IPOther(String playerName) implements BungeeRequest {
@@ -98,6 +102,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates an IPOther request for a player.
+         *
          * @param player The player to get the IP address for.
          */
         public IPOther(Pointered player) {
@@ -109,6 +114,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Requests the player count of a server.
      * <br>
      * You can get player count responses for all servers sending a {@link #all()} request.
+     *
      * @param serverName Player count of that server (Defined in your proxy config) or ALL for all defined servers.
      */
     record PlayerCount(String serverName) implements BungeeRequest {
@@ -126,6 +132,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * A {@link PlayerCount} request for all players.
          * <br>
          * Expect multiple responses if there is more than one server with players on it.
+         *
          * @return A {@link PlayerCount} request for all players.
          */
         @Contract(pure = true)
@@ -138,6 +145,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Requests the player list of a server.
      * <br>
      * You can get player list responses for all servers sending a {@link #all()} request.
+     *
      * @param serverName Player list of that server (Defined in your proxy config)
      */
     record PlayerList(String serverName) implements BungeeRequest {
@@ -155,6 +163,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
          * A {@link PlayerList} request for all players.
          * <br>
          * Expect multiple responses if there is more than one server with players on it.
+         *
          * @return A {@link PlayerList} request for all players.
          */
         @Contract(pure = true)
@@ -173,8 +182,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Sends a message to a player.
+     *
      * @param playerName The name of the player to send the message to.
-     * @param message The message to send to the player.
+     * @param message    The message to send to the player.
      */
     record Message(String playerName, String message) implements BungeeRequest {
         @ApiStatus.Experimental
@@ -191,7 +201,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a Message request for a player.
-         * @param player The player to send the message to.
+         *
+         * @param player  The player to send the message to.
          * @param message The message to send to the player.
          */
         public Message(Pointered player, String message) {
@@ -200,7 +211,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a Message request for a player with basic styling only.
-         * @param player The player to send the message to.
+         *
+         * @param player  The player to send the message to.
          * @param message The message to send to the player as legacy text.
          */
         public Message(Pointered player, Component message) {
@@ -209,6 +221,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a Message request for all players across all servers.
+         *
          * @param message The message to send to all players.
          * @return A Message request for all players.
          */
@@ -220,8 +233,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Sends a raw message to a player. The message is interpreted as proper components.
+     *
      * @param playerName The name of the player to send the raw message to.
-     * @param message The raw message to send to the player formatted as JSON.
+     * @param message    The raw message to send to the player formatted as JSON.
      */
     record MessageRaw(String playerName, String message) implements BungeeRequest {
         @ApiStatus.Experimental
@@ -238,7 +252,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a MessageRaw request for a player.
-         * @param player The player to send the raw message to.
+         *
+         * @param player  The player to send the raw message to.
          * @param message The raw message to send to the player formatted as JSON.
          */
         public MessageRaw(Pointered player, String message) {
@@ -247,8 +262,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a MessageRaw request for a player.
+         *
          * @param playerName The name of the player to send the raw message to.
-         * @param message The raw message to send to the player formatted as JSON.
+         * @param message    The raw message to send to the player formatted as JSON.
          */
         public MessageRaw(String playerName, Component message) {
             this(playerName, GsonComponentSerializer.gson().serialize(message));
@@ -256,7 +272,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a MessageRaw request for a player.
-         * @param player The player to send the raw message to.
+         *
+         * @param player  The player to send the raw message to.
          * @param message The raw message to send to the player formatted as JSON.
          */
         public MessageRaw(Pointered player, Component message) {
@@ -265,6 +282,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a MessageRaw request for all players across all servers.
+         *
          * @param message The message to send to all players.
          * @return A MessageRaw request for all players.
          */
@@ -275,6 +293,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a MessageRaw request for all players across all servers.
+         *
          * @param message The message to send to all players.
          * @return A MessageRaw request for all players.
          */
@@ -294,6 +313,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Requests the server a player is connected to.
+     *
      * @param playerName The name of the player to get the server for.
      */
     record GetPlayerServer(String playerName) implements BungeeRequest {
@@ -322,6 +342,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Requests the UUID of a player.
+     *
      * @param playerName The name of the player to get the UUID for.
      */
     record UUIDOther(String playerName) implements BungeeRequest {
@@ -342,6 +363,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Requests the IP address and port of a server.
+     *
      * @param serverName The name of the server to get the IP and port for. (Defined in your proxy config)
      */
     record ServerIP(String serverName) implements BungeeRequest {
@@ -358,8 +380,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Kicks a player from the server with a reason.
+     *
      * @param playerName The name of the player to kick.
-     * @param reason The reason for kicking the player.
+     * @param reason     The reason for kicking the player.
      */
     record KickPlayer(String playerName, String reason) implements BungeeRequest {
         @ApiStatus.Experimental
@@ -376,7 +399,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a KickPlayer request for a player.
-         * @param player The player to kick.
+         *
+         * @param player  The player to kick.
          * @param message The reason for kicking the player.
          */
         public KickPlayer(Pointered player, String message) {
@@ -386,8 +410,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
     /**
      * Kicks a player from the server with a reason.
+     *
      * @param playerName The name of the player to kick.
-     * @param reason The reason for kicking the player as a JSON string.
+     * @param reason     The reason for kicking the player as a JSON string.
      */
     record KickPlayerRaw(String playerName, String reason) implements BungeeRequest {
         @ApiStatus.Experimental
@@ -404,7 +429,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a KickPlayerRaw request for a player.
-         * @param player The player to kick.
+         *
+         * @param player  The player to kick.
          * @param message The reason for kicking the player.
          */
         public KickPlayerRaw(Pointered player, String message) {
@@ -413,8 +439,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a KickPlayerRaw request for a player.
+         *
          * @param playerName The name of the player to kick.
-         * @param message The reason for kicking the player.
+         * @param message    The reason for kicking the player.
          */
         public KickPlayerRaw(String playerName, Component message) {
             this(playerName, GsonComponentSerializer.gson().serialize(message));
@@ -422,7 +449,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a KickPlayerRaw request for a player.
-         * @param player The player to kick.
+         *
+         * @param player  The player to kick.
          * @param message The reason for kicking the player.
          */
         public KickPlayerRaw(Pointered player, Component message) {
@@ -436,9 +464,10 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Forward it to a specific player using {@link ForwardToPlayer},
      * use {@link #all(PluginMessagePacket)} to send a single message to all servers,
      * or {@link #online(PluginMessagePacket)} to send to online servers
+     *
      * @param serverName The name of the server to forward the data to. Supports ALL and ONLINE.
-     * @param channel The channel to forward the data to.
-     * @param data The data to forward.
+     * @param channel    The channel to forward the data to.
+     * @param data       The data to forward.
      */
     record Forward(String serverName, String channel, byte[] data) implements BungeeRequest {
         @ApiStatus.Experimental
@@ -460,8 +489,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a {@link Forward} request for all servers. (excluding the server this request is sent from)
+         *
          * @param channel The channel to forward the data to.
-         * @param data The data to forward.
+         * @param data    The data to forward.
          * @return A {@link Forward} request for all servers.
          */
         @Contract(pure = true)
@@ -471,6 +501,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a {@link Forward} request for all servers. (excluding the server this request is sent from)
+         *
          * @param packet The PluginMessagePacket to forward.
          * @return A {@link Forward} request for all servers.
          */
@@ -481,6 +512,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a {@link Forward} request for all servers. (excluding the server this request is sent from)
+         *
          * @param packet The ClientPluginMessagePacket to forward.
          * @return A {@link Forward} request for all servers.
          */
@@ -491,8 +523,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a {@link Forward} request for the online server. (excluding the server this request is sent from)
+         *
          * @param channel The channel to forward the data to.
-         * @param data The data to forward.
+         * @param data    The data to forward.
          * @return A {@link Forward} request for the online server.
          */
         @Contract(pure = true)
@@ -502,6 +535,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a {@link Forward} request for the online server. (excluding the server this request is sent from)
+         *
          * @param packet The PluginMessagePacket to forward.
          * @return A {@link Forward} request for the online server.
          */
@@ -512,6 +546,7 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a {@link Forward} request for the online server. (excluding the server this request is sent from)
+         *
          * @param packet The ClientPluginMessagePacket to forward.
          * @return A {@link Forward} request for the online server.
          */
@@ -539,9 +574,10 @@ public sealed interface BungeeRequest extends BungeeMessage {
      * Forwards data to a specific player.
      * <br>
      * Note: The response for this is the same as {@link Forward} as BungeeCord provides no way to differ the requests.
+     *
      * @param playerName The name of the player to forward the data to.
-     * @param channel The channel to forward the data to.
-     * @param data The data to forward.
+     * @param channel    The channel to forward the data to.
+     * @param data       The data to forward.
      */
     record ForwardToPlayer(String playerName, String channel,
                            byte[] data) implements BungeeRequest {
@@ -564,9 +600,10 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a ForwardToPlayer request for a specific player.
-         * @param player The player to forward the data to.
+         *
+         * @param player  The player to forward the data to.
          * @param channel The channel to forward the data to.
-         * @param data The data to forward.
+         * @param data    The data to forward.
          */
         public ForwardToPlayer(Pointered player, String channel, byte[] data) {
             this(player.get(Identity.NAME).orElseThrow(), channel, data);
@@ -574,8 +611,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a ForwardToPlayer request for a specific player.
+         *
          * @param playerName The name of the player to forward the data to.
-         * @param message The PluginMessagePacket to forward.
+         * @param message    The PluginMessagePacket to forward.
          */
         public ForwardToPlayer(String playerName, PluginMessagePacket message) {
             this(playerName, message.channel(), message.data());
@@ -583,7 +621,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a ForwardToPlayer request for a specific player.
-         * @param player The player to forward the data to.
+         *
+         * @param player  The player to forward the data to.
          * @param message The PluginMessagePacket to forward.
          */
         public ForwardToPlayer(Pointered player, PluginMessagePacket message) {
@@ -592,8 +631,9 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a ForwardToPlayer request for a specific player.
+         *
          * @param playerName The name of the player to forward the data to.
-         * @param message The ClientPluginMessagePacket to forward.
+         * @param message    The ClientPluginMessagePacket to forward.
          */
         public ForwardToPlayer(String playerName, ClientPluginMessagePacket message) {
             this(playerName, message.channel(), message.data());
@@ -601,7 +641,8 @@ public sealed interface BungeeRequest extends BungeeMessage {
 
         /**
          * Creates a ForwardToPlayer request for a specific player.
-         * @param player The player to forward the data to.
+         *
+         * @param player  The player to forward the data to.
          * @param message The ClientPluginMessagePacket to forward.
          */
         public ForwardToPlayer(Pointered player, ClientPluginMessagePacket message) {

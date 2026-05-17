@@ -1,3 +1,6 @@
+/**
+ * Frieght is a library for <a href="https://minestom.net">Minestom</a> servers to communicate with BungeeCord.
+ */
 module dev.kerman.freight {
     requires static org.jetbrains.annotations;
     requires net.minestom.server;

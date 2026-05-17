@@ -138,7 +138,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      *
      * @param bytes the byte array to read the request from
      * @return the request, never null
-     * @throws NullPointerException if {@code bytes} is null
+     * @throws NullPointerException  if {@code bytes} is null
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     @Contract(pure = true)
@@ -153,7 +153,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      *
      * @param buffer the buffer to read the response from
      * @return the response, never null
-     * @throws NullPointerException if {@code buffer} is null
+     * @throws NullPointerException  if {@code buffer} is null
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     @Contract(mutates = "param1")
@@ -182,7 +182,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      *
      * @param bytes the byte array to read the response from
      * @return the response, never null
-     * @throws NullPointerException if {@code bytes} is null
+     * @throws NullPointerException  if {@code bytes} is null
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     @Contract(pure = true)
@@ -197,7 +197,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      *
      * @param buffer the buffer to read the response from
      * @return the response, never null
-     * @throws NullPointerException if {@code buffer} is null
+     * @throws NullPointerException  if {@code buffer} is null
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     @Contract(mutates = "param1")
@@ -214,7 +214,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      *
      * @param event the event to read the response from
      * @return the response, or null if the event is not a BungeeCord message
-     * @throws NullPointerException if {@code event} is null
+     * @throws NullPointerException  if {@code event} is null
      * @throws IllegalStateException if there are leftover bytes in the buffer after reading the request
      */
     @Contract(pure = true)
@@ -267,8 +267,8 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      *
      * @param audiences the collection of audiences to send the message to
      * @param message   the message to send
-     * @throws NullPointerException if {@code audiences} is null
-     * @throws NullPointerException if {@code message} is null
+     * @throws NullPointerException     if {@code audiences} is null
+     * @throws NullPointerException     if {@code message} is null
      * @throws IllegalArgumentException if the collection is empty
      */
     static void sendSingle(Collection<? extends Audience> audiences, BungeeMessage message) {
@@ -342,7 +342,7 @@ public sealed interface BungeeMessage permits BungeeRequest, BungeeResponse {
      * </p>
      *
      * @param audiences the collection of audiences to send the message to
-     * @throws NullPointerException if {@code audiences} is null
+     * @throws NullPointerException     if {@code audiences} is null
      * @throws IllegalArgumentException if the collection is empty
      */
     default void sendSingle(Collection<? extends Audience> audiences) {

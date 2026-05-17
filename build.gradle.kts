@@ -1,6 +1,7 @@
 plugins {
     id("java")
     alias(libs.plugins.maven.publish)
+    alias(libs.plugins.spotless)
 }
 
 group = "dev.kerman"
@@ -23,6 +24,10 @@ tasks {
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(25))
         modularity.inferModulePath.set(true)
+
+        compileJava {
+            options.compilerArgs.add("-Werror")
+        }
     }
 
     javadoc {
@@ -30,6 +35,7 @@ tasks {
             links("https://javadoc.minestom.net/")
             links("https://jd.papermc.io/adventure/${libs.versions.adventure.get()}/")
             links("https://javadoc.io/doc/org.jetbrains/annotations/${libs.versions.jetbrains.annotations.get()}/")
+            addBooleanOption("Xdoclint:all,-missing", true)
         }
     }
 
@@ -39,6 +45,19 @@ tasks {
         // Required for Minestom tests to run properly
         jvmArgs("-Dminestom.viewable-packet=false")
         jvmArgs("-Dminestom.inside-test=true")
+    }
+}
+
+spotless {
+    format("misc") {
+        target("*.gradle.kts", ".gitignore")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    java {
+        removeUnusedImports()
+        forbidWildcardImports()
+        forbidModuleImports()
     }
 }
 

@@ -26,7 +26,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing the IP address and port of the server.
-     * @param ip the IP address of the server
+     *
+     * @param ip   the IP address of the server
      * @param port the port of the server, must be non-negative and less than or equal to 65535
      */
     record IP(String ip, int port) implements BungeeResponse {
@@ -46,9 +47,10 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing the player name, IP address, and port of another player.
+     *
      * @param playerName the name of the player
-     * @param ip the IP address of the player
-     * @param port the port of the player, must be non-negative and less than or equal to 65535
+     * @param ip         the IP address of the player
+     * @param port       the port of the player, must be non-negative and less than or equal to 65535
      */
     record IPOther(String playerName, String ip, int port) implements BungeeResponse {
         @ApiStatus.Experimental
@@ -69,7 +71,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing the server name and the number of players online.
-     * @param serverName the name of the server
+     *
+     * @param serverName  the name of the server
      * @param playerCount the number of players online, must be greater than 0
      */
     record PlayerCount(String serverName, int playerCount) implements BungeeResponse {
@@ -89,7 +92,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing the server name and a list of player names.
-     * @param serverName the name of the server
+     *
+     * @param serverName     the name of the server
      * @param playerNameList the list of player names, must not be null or empty
      */
     record PlayerList(String serverName, List<String> playerNameList) implements BungeeResponse {
@@ -109,6 +113,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing a list of server names.
+     *
      * @param serverNames the list of server names (As defined in the proxy config)
      */
     record GetServers(List<String> serverNames) implements BungeeResponse {
@@ -126,6 +131,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing the server name.
+     *
      * @param serverName the name of the server
      */
     record GetServer(String serverName) implements BungeeResponse {
@@ -142,6 +148,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing the player name and server name.
+     *
      * @param playerName the name of the player
      * @param serverName the name of the server
      */
@@ -161,6 +168,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing a UUID.
+     *
      * @param uuid the UUID of the player, must not be null
      */
     record UUID(java.util.UUID uuid) implements BungeeResponse {
@@ -177,8 +185,9 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing a player name and UUID.
+     *
      * @param playerName the name of the player
-     * @param uuid the UUID of the player
+     * @param uuid       the UUID of the player
      */
     record UUIDOther(String playerName, java.util.UUID uuid) implements BungeeResponse {
         @ApiStatus.Experimental
@@ -196,9 +205,10 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing the server name, IP address, and port.
+     *
      * @param serverName the name of the server
-     * @param ip the IP address of the server
-     * @param port the port of the server, must be greater than 0 and less than or equal to 65535
+     * @param ip         the IP address of the server
+     * @param port       the port of the server, must be greater than 0 and less than or equal to 65535
      */
     record ServerIP(String serverName, String ip, int port) implements BungeeResponse {
         @ApiStatus.Experimental
@@ -219,8 +229,9 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response to forward a message to a specific channel.
+     *
      * @param channel the channel forwarded
-     * @param data the data forwarded
+     * @param data    the data forwarded
      */
     record Forward(String channel, byte[] data) implements BungeeResponse {
         @ApiStatus.Experimental

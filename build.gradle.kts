@@ -28,7 +28,7 @@ tasks {
     javadoc {
         (options as StandardJavadocDocletOptions).apply {
             links("https://javadoc.minestom.net/")
-            links("https://jd.advntr.dev/api/${libs.versions.adventure.get()}/")
+            links("https://jd.papermc.io/adventure/${libs.versions.adventure.get()}/")
             links("https://javadoc.io/doc/org.jetbrains/annotations/${libs.versions.jetbrains.annotations.get()}/")
         }
     }

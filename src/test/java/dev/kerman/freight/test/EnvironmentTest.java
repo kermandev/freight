@@ -1,4 +1,4 @@
-package dev.kerman.freight;
+package dev.kerman.freight.test;
 
 import net.minestom.server.ServerFlag;
 import net.minestom.testing.Env;

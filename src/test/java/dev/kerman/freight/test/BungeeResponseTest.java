@@ -1,5 +1,7 @@
-package dev.kerman.freight;
+package dev.kerman.freight.test;
 
+import dev.kerman.freight.BungeeMessage;
+import dev.kerman.freight.BungeeResponse;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.player.PlayerPluginMessageEvent;
 import net.minestom.server.network.NetworkBuffer;

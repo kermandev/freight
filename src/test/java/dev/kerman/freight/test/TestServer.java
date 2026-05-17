@@ -1,5 +1,7 @@
-package dev.kerman.freight;
+package dev.kerman.freight.test;
 
+import dev.kerman.freight.BungeeMessage;
+import dev.kerman.freight.BungeeRequest;
 import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
@@ -17,8 +19,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class TestServer {
-
-    static void main(String[] args) {
+    void main(String[] args) {
         if (args.length == 0) {
             System.err.println("Usage: TestServer <bungeecord/bungeegaurd/velocity/online/offline>");
             return;
@@ -64,92 +65,92 @@ public class TestServer {
             super("test");
 
             setCondition(Conditions::playerOnly);
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.Message(sender, "Hello from the proxy!");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("message"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.MessageRaw(sender, "{\"text\":\"Raw JSON message!\"}");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("messageraw"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.Connect("lobby");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("connect"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.ConnectOther(sender, "lobby");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("connectother"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.IP();
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("ip"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.IPOther(sender);
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("ipother"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.PlayerCount("lobby");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("playercount"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.PlayerList("lobby");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("playerlist"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.GetServers();
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("getservers"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.GetServer();
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("getserver"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.GetPlayerServer(sender);
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("getplayerserver"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.UUID();
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("uuid"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.UUIDOther(sender);
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("uuidother"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.ServerIP("lobby");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("serverip"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.KickPlayer(sender, "Test kick reason");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("kickplayer"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.KickPlayerRaw(sender, "{\"text\":\"Kicked!\"}");
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("kickplayerraw"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.Forward("lobby", "test:channel", new byte[]{1, 2, 3});
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("forward"));
 
-            addSyntax((sender, args) -> {
+            addSyntax((sender, _) -> {
                 var packet = new BungeeRequest.ForwardToPlayer(sender, "test:channel", new byte[]{4, 5, 6});
                 sendMessage(sender, packet);
             }, ArgumentType.Literal("forwardtoplayer"));

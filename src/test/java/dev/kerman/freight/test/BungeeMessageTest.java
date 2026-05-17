@@ -1,5 +1,7 @@
-package dev.kerman.freight;
+package dev.kerman.freight.test;
 
+import dev.kerman.freight.BungeeMessage;
+import dev.kerman.freight.BungeeRequest;
 import net.kyori.adventure.audience.Audience;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.network.packet.server.common.PluginMessagePacket;
@@ -8,7 +10,6 @@ import net.minestom.testing.EnvTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 @EnvTest

@@ -177,8 +177,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
     /**
      * A response containing a player name and UUID.
-     * @param playerName
-     * @param uuid
+     * @param playerName the name of the player
+     * @param uuid the UUID of the player
      */
     record UUIDOther(String playerName, java.util.UUID uuid) implements BungeeResponse {
         @ApiStatus.Experimental

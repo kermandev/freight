@@ -85,8 +85,8 @@ public sealed interface BungeeResponse extends BungeeMessage {
 
         public PlayerCount {
             Objects.requireNonNull(serverName, "Server name cannot be null");
-            if (playerCount <= 0)
-                throw new IllegalArgumentException("Player count must not be negative 0");
+            if (playerCount < 0)
+                throw new IllegalArgumentException("Player count must not be negative");
         }
     }
 
@@ -222,7 +222,7 @@ public sealed interface BungeeResponse extends BungeeMessage {
         public ServerIP {
             Objects.requireNonNull(serverName, "Server name cannot be null");
             Objects.requireNonNull(ip, "IP cannot be null");
-            if (port <= 0 || port > 65535)
+            if (port < 0 || port > 65535)
                 throw new IllegalArgumentException("Port must be greater than 0 and less than or equal to 65535");
         }
     }

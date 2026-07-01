@@ -45,7 +45,7 @@ final class BungeeProtocol {
         public byte[] read(NetworkBuffer buffer) {
             final int length = buffer.read(NetworkBuffer.UNSIGNED_SHORT);
             if (length > 65535) throw new IllegalStateException("Value too long");
-            if (buffer.readableBytes() > length) throw new IllegalStateException("Value too long to read");
+            if (length > buffer.readableBytes()) throw new IllegalStateException("Value too long to read");
             return buffer.read(NetworkBuffer.FixedRawBytes(length));
         }
     };

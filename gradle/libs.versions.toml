@@ -10,7 +10,7 @@ junit-bom = "6.1.0"
 spotless = "8.7.0"
 
 # Publishing
-maven-publish = "0.36.0"
+maven-publish = "0.37.0"
 
 [libraries]
 minestom = { module = "net.minestom:minestom", version.ref = "minestom" }

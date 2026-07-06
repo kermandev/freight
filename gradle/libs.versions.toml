@@ -7,7 +7,7 @@ jetbrains-annotations = "26.1.0"
 
 # Verification
 junit-bom = "6.1.0"
-spotless = "8.7.0"
+spotless = "8.8.0"
 
 # Publishing
 maven-publish = "0.37.0"
